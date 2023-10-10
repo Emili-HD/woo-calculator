@@ -51,5 +51,5 @@ export function customCalculoCanto(calculosPersonalizados, nuevaCantidad) {
     });
 
     calculosPersonalizados.customCalculosCantos = calculosCantosArray;
-    // console.log('Cálculos personalizados:', calculosPersonalizados.getCalculos());
+    console.log('Cálculos personalizados:', calculosPersonalizados.getCalculos());
 }
