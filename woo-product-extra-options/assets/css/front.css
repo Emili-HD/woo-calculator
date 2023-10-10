@@ -1,0 +1,275 @@
+.archive li.product a.button {
+    position: absolute;
+    bottom: -45px;
+    right: 1rem;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] { -moz-appearance:textfield; }
+
+.postid-280 .wpcc-group-radios[data-name=tamano],
+.postid-297 .wpcc-group-radios[data-name=tamano] {
+    display: none;
+}
+
+div#tab-description.woocommerce-Tabs-panel--description {
+    display: block !important;
+    width: 60vw;
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
+    margin-bottom: 0vh;
+}
+
+div#tab-description.woocommerce-Tabs-panel--description .woocommerce-Tabs-panel--description {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+div#tab-description.woocommerce-Tabs-panel--description p {
+    font-size: 1rem;
+}
+
+.wpcc-options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+
+.single-product .section.site-main .product.type-product .entry-summary {
+    width: 60vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin: 0;
+    padding-bottom: 10vh;
+    align-content: flex-start;
+}
+
+.wpcc-field {
+    align-items: flex-start;
+    /* border-bottom: 1px solid rgba(0, 0, 0, 0.0666666667); */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    padding: 1rem 0;
+    margin: 0px;
+    transition: background-color 0.3s ease 0s;
+    width: 20vw;
+    order: 2;
+}
+.wpcc-field:hover {
+    background-color: #f5f5f5;
+}
+  
+.wpcc-group-radios {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-start;
+}
+
+.wpcc-group-radios[data-name=tamano] {
+    order: 0;
+}
+
+.wpcc-group-radios[data-name=cartulina] {
+    order: 1;
+}
+
+.wpcc-field-name {
+    align-items: center;
+    display: flex;
+    font-size: var(--wpo-option-name-font-size);
+    font-weight: 500;
+    margin: 0 0 4px;
+    padding: 0.25rem 1.5625rem;
+}
+
+.wpcc-field-radios {
+    /* position: absolute;
+    overflow: hidden;
+    height: 0; */
+
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0px;
+    justify-content: flex-start;
+}
+
+.wpcc-input-radio {
+    margin: 0;
+    padding: 0.25rem 1.5625rem;
+    width: 20vw;
+    font-size: 0.9rem;
+}
+
+.wpcc-input-radio .custom__sizes-size {
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+    height: fit-content;
+    max-height: 0;
+    transition: max-height 0.5s ease;
+}
+
+.wpcc-input-radio .custom__sizes-size.active {
+    max-height: 12.5rem;
+}
+
+.wpcc-group-radios[data-family=encuadernado] {
+    width: 0%;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+    height: fit-content;
+    padding: 0;
+    opacity: 0;
+    max-height: 0;
+    transition: all 0.25s ease;
+}
+
+.wpcc-group-radios.active {
+    opacity: 1;
+    width: 20vw;
+    padding: 1rem 0;
+    max-height: 50rem !important;
+}
+
+.wpcc-input-radio .custom__sizes-size span {
+    width: 80px;
+    display: inline-block;
+}
+
+.wpcc-input-radio .custom__sizes-size input[type="number"] {
+    width: calc(100% - 90px);
+    display: inline-block;
+}
+
+.variations__table-title input.custom__quantity {
+    display: inline-block;
+    width: 50%;
+}
+
+.variations__table-title #calcularCantidad {
+    display: inline-block;
+    width: 40%;
+}
+
+button[type=button],
+button[type="submit"] {
+    width: max(200px, 15vw);
+    background-color: #E97F25;
+    border: 0;
+    border-radius: 0;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 1.4rem;
+    order: 3;
+    padding: 0.7rem;
+}
+
+#calcularBtn,
+#calcularCantidad {
+    background-color: #607D8B;
+}
+
+
+.box__dragndrop,
+.box__uploading,
+.box__success,
+.box__error {
+  display: none;
+}
+
+.wpcc-input-upload,
+.vicode-custom-field-wrapper {
+    outline: 1px dashed #ccc;
+    outline-offset: -10px;
+    width: calc(20vw - 3rem);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    margin: 1.5rem;
+}
+
+.wpcc-input-upload .box__dragndrop {
+    display: inline;
+}
+
+.wpcc-input-upload .box__icon {
+    width: 70%;
+    height: 80px;
+    fill: #627C8A;
+    display: block;
+}
+
+.wpcc-input-upload label {
+    cursor: pointer;
+}
+
+.box__file,
+#vicode-file-field {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+button.box__button {
+    width: 200px;
+    background-color: #617d8b;
+    border: 0;
+    border-radius: 0;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 0;
+    padding: 0.7rem;
+}
+
+
+.box__success {
+    -webkit-animation: appear-from-inside .25s ease-in-out;
+    animation: appear-from-inside .25s ease-in-out;
+}
+
+.product-type-simple form.cart .addtocart-wrapper {
+    padding: 2rem !important;
+    width: 60vw;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.wpcc-group-radios[data-name=tipo_laminado] {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.5s, opacity 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.wpcc-group-radios.active {
+    opacity: 1;
+    max-height: 15rem;
+    transition: max-height 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s, opacity 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.5s; 
+}

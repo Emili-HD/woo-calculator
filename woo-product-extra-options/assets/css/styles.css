@@ -1,0 +1,68 @@
+table.calculator {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table.calculator td, 
+table.calculator th {
+  border: 1px solid #f0f0f0;
+  text-align: left;
+  padding: 12px;
+}
+
+table.calculator tr:nth-child(even) {
+  background-color: #f0f0f0;
+}
+
+
+/* #wpcc_options_meta_box {
+  display: none;
+} */
+
+/* Estilos para el acordeón */
+.accordion_section {
+  display: block;
+  overflow: hidden;
+  max-height: 0;
+  transition: all .5s ease;
+}
+
+.accordion_section.active {
+  max-height: fit-content;
+  transition: all 1s ease;
+  margin-bottom: 5px;
+}
+
+/* Estilos adicionales para el aspecto del acordeón */
+.accordion h3 {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 0 0 5px;
+  cursor: pointer;
+}
+
+.accordion h3:hover {
+  background-color: #e0e0e0;
+}
+
+
+
+.inside.acf-fields.-top {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.post-type-product .acf-fields > .acf-field {
+  position: relative;
+  margin: 0;
+  padding: 16px;
+  border-right: 1px solid #EAECF0;
+  border-bottom: 1px solid #EAECF0;
+  border-top: none !important;
+  width: 25%;
+}
