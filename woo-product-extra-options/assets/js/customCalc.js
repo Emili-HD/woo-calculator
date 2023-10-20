@@ -11,6 +11,7 @@ import { customCalculoLaminado } from './modules/front/calculoLaminado.js';
 import { customCalculoHendido } from './modules/front/calculoHendido.js';
 import { calculoGrapado } from './modules/front/calculoGrapado.js';
 import { calculoEncuadernado } from './modules/front/calculoEncuadernado.js';
+import { calculoAgujereado } from './modules/front/calculoAgujereado.js';
 import { calculoPlastificado } from './modules/front/calculoPlastificado.js';
 import { customCalculoTotales } from './modules/front/totalesCosteVenta.js';
 
@@ -19,7 +20,7 @@ const atributos = JSON.parse(wpcc_vars.atributos);
 document.addEventListener('DOMContentLoaded', (event) => {
     window.addEventListener("load", function(e) {
 
-        function seleccionarPrimerRadio() {
+        const seleccionarPrimerRadio = () => {
             let groups = document.querySelectorAll('.wpcc-field.wpcc-group-radios')
             groups.forEach(group => {
                 let firstRadioInput;
@@ -34,27 +35,71 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
         seleccionarPrimerRadio()
 
-        const nuevaCantidad = parseInt(document.querySelector("input.custom__quantity").value);
+        const tamanoGroup = document.querySelector(".wpcc-group-radios[data-name=tamano]");
+        const cartulinaGroup = document.querySelector('div[data-name=cartulina] .wpcc-field-radios');
 
-        customCalculoInicial(calculosPersonalizados, nuevaCantidad);
-        calculoInicialCopisteria(calculosPersonalizados, nuevaCantidad);
-        calculoCustomTamano(calculosPersonalizados, nuevaCantidad);
-        calculoCustomCantidad(calculosPersonalizados, nuevaCantidad);
-        customCalculoPapel(calculosPersonalizados, nuevaCantidad);
-        customCalculoImpresion(calculosPersonalizados, nuevaCantidad);
-        customCalculoCorte(calculosPersonalizados, nuevaCantidad);
-        customCalculoCanto(calculosPersonalizados, nuevaCantidad);
-        customCalculoLaminado(calculosPersonalizados, nuevaCantidad);
-        customCalculoHendido(calculosPersonalizados, nuevaCantidad);
-        calculoGrapado(calculosPersonalizados, nuevaCantidad);
-        calculoEncuadernado(calculosPersonalizados, nuevaCantidad);
-        calculoPlastificado(calculosPersonalizados, nuevaCantidad);
-        customCalculoTotales(calculosPersonalizados, nuevaCantidad);
+        // Agrega un evento change a los radios del grupo "tamano"
+        tamanoGroup.addEventListener("change", function() {
+            // Obtiene el valor del radio seleccionado
+            let selectedTamano = tamanoGroup.querySelector("input[name='tamano']:checked").getAttribute("data-format");
+
+            // Recorre los radios en el grupo "cartulina" y muestra u oculta según el valor seleccionado
+            var cartulinaRadios = cartulinaGroup.querySelectorAll("input[name='cartulina']");
+            let firstVisibleRadio = null;
+
+            cartulinaRadios.forEach(function(radio) {
+                let format = radio.getAttribute("data-format");
+                let parent = radio.parentElement;
+
+                const selectRadioCartulina = () => {
+                    if (!firstVisibleRadio) {
+                        firstVisibleRadio = radio;
+                        firstVisibleRadio.checked = true;
+                    }
+                }
+                
+                if ((selectedTamano === "A4" || selectedTamano === "A5" || selectedTamano === "A6") && format === "A4") {
+                    parent.style.display = "block";
+                    selectRadioCartulina()
+                } else if ((selectedTamano === "A3" || selectedTamano === "SRA3") && (format === "A3" || format === "SRA3")) {
+                    parent.style.display = "block";
+                    selectRadioCartulina()
+                } else {
+                    parent.style.display = "none";
+                }
+            });
+
+            
+        });
+
+        // Ejecuta el evento change inicialmente para reflejar el estado inicial
+        tamanoGroup.dispatchEvent(new Event("change"));
+
+        const nuevaCantidad = parseInt(document.querySelector("input.custom__quantity").value);
+        let cantidadCopias = document.querySelector("input.cantidad__copias");
+        if (cantidadCopias) {
+            cantidadCopias = parseInt(cantidadCopias.value)
+        }
+
+        customCalculoInicial(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        calculoInicialCopisteria(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        calculoCustomTamano(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        calculoCustomCantidad(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        customCalculoPapel(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        customCalculoImpresion(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        customCalculoCorte(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        customCalculoCanto(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        customCalculoLaminado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        customCalculoHendido(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        calculoGrapado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        calculoEncuadernado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        calculoAgujereado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        calculoPlastificado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+        customCalculoTotales(calculosPersonalizados, nuevaCantidad, cantidadCopias);
     
         // Verificación de la existencia del grupo de radios para cantos y laminado
         const cantosGroup = document.querySelector(".wpcc-group-radios[data-name=cantos]");
         const laminadoGroup = document.querySelector(".wpcc-group-radios[data-name=laminado]");
-        const cartulinaGroup = document.querySelector('div[data-name=cartulina] .wpcc-field-radios');
         const hendidoGroup = document.querySelector('div[data-name=hendido] .wpcc-field-radios');
         const colorGroup = document.querySelector('div[data-name=color] .wpcc-field-radios');
         // const firstRadioInput = cartulinaGroup.querySelector('input[type="radio"]');
@@ -220,6 +265,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         for (const key in calculosPersonalizados) {
                             if (calculosPersonalizados.hasOwnProperty(key)) {
                                 var array = calculosPersonalizados[key];
+                                // console.log(array);
                                 for (var i = 0; i < array.length; i++) {
                                     var cantidad = array[i].cantidad;
                                     // console.log(cantidad);
@@ -382,6 +428,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         // Obtener los valores de alto y ancho del usuario
         const calcularCantidadBtn = document.querySelector('#calcularCantidad');
         const cantidadInput = document.querySelector('#customQuantityInput');
+        const copiasInput = document.querySelector('#cantidadCopiasInput');
         
         // Función para recalcular tamaños personalizados
         // Variables para almacenar los valores previos de alto y ancho
@@ -417,20 +464,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
             calculosPersonalizados.cantidad = nuevaCantidad;
         
             // Realizar cálculos basados en la nueva cantidad
-            customCalculoInicial(calculosPersonalizados, nuevaCantidad);
-            calculoInicialCopisteria(calculosPersonalizados, nuevaCantidad);
-            calculoCustomTamano(calculosPersonalizados, nuevaCantidad);
-            calculoCustomCantidad(calculosPersonalizados, nuevaCantidad);
-            customCalculoPapel(calculosPersonalizados, nuevaCantidad);
-            customCalculoImpresion(calculosPersonalizados, nuevaCantidad);
-            customCalculoCorte(calculosPersonalizados, nuevaCantidad);
-            customCalculoCanto(calculosPersonalizados, nuevaCantidad);
-            customCalculoLaminado(calculosPersonalizados, nuevaCantidad);
-            customCalculoHendido(calculosPersonalizados, nuevaCantidad);
-            calculoGrapado(calculosPersonalizados, nuevaCantidad);
-            calculoEncuadernado(calculosPersonalizados, nuevaCantidad);
-            calculoPlastificado(calculosPersonalizados, nuevaCantidad);
-            customCalculoTotales(calculosPersonalizados, nuevaCantidad);
+            customCalculoInicial(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoInicialCopisteria(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoCustomTamano(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoCustomCantidad(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoPapel(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoImpresion(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoCorte(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoCanto(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoLaminado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoHendido(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoGrapado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoEncuadernado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoPlastificado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoTotales(calculosPersonalizados, nuevaCantidad, cantidadCopias);
         
             const { cartulinaVal, tamanoVal, impresionVal, cantosVal, laminadoVal, hendidoVal, colorVal  } = getRadioValues();
         
@@ -440,6 +487,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         function recalcularTamanos() {
             const nuevaCantidad = parseInt(cantidadInput.value);
+            const cantidadCopias = parseInt(copiasInput.value)
             
             const altoInput = document.querySelector("input[name='alto']");
             const anchoInput = document.querySelector("input[name='ancho']");
@@ -463,6 +511,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         
         function recalcularCantidades() {
             const nuevaCantidad = parseInt(cantidadInput.value);
+            const cantidadCopias = parseInt(copiasInput.value);
             
             if (!isNaN(nuevaCantidad) && nuevaCantidad >= 0) {
                 // Verificar si ya existe el th para la cantidad personalizada
@@ -495,7 +544,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             // Llama a la función para actualizar campos ocultos aquí.
                             var fieldValues = captureFieldValues();
                             fieldValues.selected_display_quantity = selectedQty;
-                            console.log('datos actualizados: ', fieldValues.selected_display_quantity);
+                            // console.log('datos actualizados: ', fieldValues.selected_display_quantity);
                             addHiddenFields(fieldValues);
                         });
                         tbodyRow.appendChild(newCell);

@@ -12,8 +12,6 @@ export function customCalculoPapel(calculosPersonalizados, tamanoRadio, nuevaCan
     let maquina;
 
     function recalcularPapelSegunMaquina() {
-
-        // console.log('maquina', maquina);
         
         // Buscar la coincidencia de esa máquina
         let amortizacion = null;
@@ -32,7 +30,7 @@ export function customCalculoPapel(calculosPersonalizados, tamanoRadio, nuevaCan
             for (const i in calculo) {
                 for (const j in calculo[i].detalles) {
                     for (const k in calculo[i].detalles[j]) {
-                        for (const m in calculo[i].detalles[j][k]) {
+                        // for (const m in calculo[i].detalles[j][k]) {
                             
                             // console.log(amortizacionTotal);
                             let hojas = calculo[i].detalles[j][k].hojas;
@@ -102,7 +100,7 @@ export function customCalculoPapel(calculosPersonalizados, tamanoRadio, nuevaCan
                                 calculosPersonalizados.customCalculosPapeles[i].detalles[j][k].importePapel = importePapel;
                             }
                         
-                        }
+                        // }
                     }
                 }
             }

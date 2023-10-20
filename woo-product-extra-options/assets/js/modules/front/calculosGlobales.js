@@ -12,6 +12,7 @@ class Calculos {
         this.customCalculosHendidos = [];
         this.calculosGrapado = [];
         this.calculosEncuadernado = [];
+        this.calculosAgujereado = [];
         this.calculosPlastificado = [];
         // this.calculosCustomTamanos = [];
         this.customTotales = [];
@@ -29,6 +30,7 @@ class Calculos {
             customCalculosHendidos: this.customCalculosHendidos,
             calculosGrapado: this.calculosGrapado,
             calculosEncuadernado: this.calculosEncuadernado,
+            calculosAgujereado: this.calculosAgujereado,
             calculosPlastificado: this.calculosPlastificado,
             // calculosCustomTamanos: this.calculosCustomTamanos,
             customTotales: this.customTotales,

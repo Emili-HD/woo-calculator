@@ -31,7 +31,7 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
             // console.log('calculoCopisteria:', calculo);
         } else {
             calculo = calculosPersonalizados.customCalculosIniciales
-            console.log('calculoIniciales:', calculo);
+            // console.log('calculoIniciales:', calculo);
         }
 
         // Reiniciar el objeto detallesCantidad antes de calcular los detalles para la nueva cantidad
@@ -74,8 +74,6 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
                                 maquina = atributos.maquina.maquina[0];
                             }
                         } 
-
-                        console.log('maquina', maquina);
 
                         const copisteria = data.primas.copisteria
                         // console.log(copisteria);

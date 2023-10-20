@@ -158,14 +158,27 @@ div#tab-description.woocommerce-Tabs-panel--description p {
     display: inline-block;
 }
 
+.variations__table-title {
+    margin: 1.5rem 0;
+    width: 100%;
+}
+
+.variations__table-title label {
+    display: inline-flex;
+    flex-direction: column;
+    margin-right: 1rem;
+    row-gap: .5rem;
+}
+
 .variations__table-title input.custom__quantity {
     display: inline-block;
-    width: 50%;
+    width: 100%;
 }
 
 .variations__table-title #calcularCantidad {
     display: inline-block;
-    width: 40%;
+    width: 7.5rem;
+    translate: 0 2.5rem;
 }
 
 button[type=button],

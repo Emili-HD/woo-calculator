@@ -37,14 +37,14 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
             if (data.campos && data.campos.cartulina) {
                  const cartulinasSeleccionadas = data.campos.cartulina;
                  const cantidades = atributos.cantidades.cantidades;
-                 const impresion = data.campos.impresion;    
+                 const impresion = data.campos.impresion;   
+                 
+                //  console.log(data.primas.materias);
 
                  
                  const materiasPrimasSeleccionadas = data.primas.materias.filter(materia => {
                      return cartulinasSeleccionadas.includes(materia[0]);
                     });
-                    //  console.log(data.primas.copisteria);
-                    //  console.log(cartulinasSeleccionadas);
                     
                     let tamanos = [];
                     if (data.campos.tamano) {
@@ -58,8 +58,6 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
                     calculosPersonalizados.calculosInicialesCopisteria.splice(0, calculosPersonalizados.calculosInicialesCopisteria.length);
                     
                     const cantidadesNumericas = cantidades.map(cantidad => parseInt(cantidad));
-                    // console.log(cantidadesNumericas);
-                    // console.log('cantidadesCopisteria:', cantidadesNumericas);
                 
                     cantidadesNumericas.forEach(cantidad => {
                         const detallesCantidad = {};
@@ -107,7 +105,6 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
                         });
                     });
              }
-            //  console.log('Cálculos copisteria:', calculosPersonalizados.getCalculos());
         }
         
         function attachMaquinaChangeEvent() {
@@ -121,7 +118,4 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
         toggleMaquina()
         attachMaquinaChangeEvent()
     }
-
-        
-
 }

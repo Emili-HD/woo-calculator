@@ -14,8 +14,14 @@ function mostrar_tabla_acf_en_producto() {
             echo '<div class="acf-fields-producto">';
             echo '<div class="variations__table-title">';
             echo '<h2>Tabla de precios y envío</h2>';
-            echo '<p>Introduce tu cantidad personalizada</p>';
-            echo '<input id="customQuantityInput" class="custom__quantity" type="number" name="cantidad_personalizada" value="0">';
+            if (is_product() && get_the_ID() == 2784) {
+                echo '<p>Introduce tu cantidad personalizada</p>';
+                echo '<label>Cantidad de copias: <input id="cantidadCopiasInput" class="custom__quantity" type="number" name="cantidad__copias" value="1"></label>';
+                echo '<label>Hojas del documento: <input id="customQuantityInput" class="custom__quantity" type="number" name="cantidad_personalizada" value="25"></label>';
+            } else {
+                echo '<p>Introduce tu cantidad personalizada</p>';
+                echo '<input id="customQuantityInput" class="custom__quantity" type="number" name="cantidad_personalizada" value="0">';
+            }
             echo '<button id="calcularCantidad" type="button">Calcular</button>';
             echo '</div>';
             echo '<table class="variations__table">';

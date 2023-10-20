@@ -48,15 +48,24 @@ function mostrar_campos_acf_en_producto() {
                             if (isset($campo_objeto['choices'][$opcion_seleccionada])) {
                                 $label = $campo_objeto['choices'][$opcion_seleccionada]; // Obtenemos la etiqueta para la opción seleccionada
                                 $isChecked = ($opcion_seleccionada == $valorPorDefecto) ? 'checked' : '';
+
+                                // Utilizamos expresiones regulares para extraer el formato de papel
+                                preg_match('/^(A4|A3|SRA3)/', $label, $matches);
+                                $formato_papel = isset($matches[1]) ? $matches[1] : '';
+
+                                // Eliminamos el formato de papel del label
+                                $label_sin_formato = str_replace($formato_papel, '', $label);
+
                                 echo '<label class="wpcc-input-radio">';
-                                echo '<input type="radio" name="' . esc_attr($nombre_campo) . '" value="' . esc_attr($opcion_seleccionada) . '" ' . $isChecked . ' > ' . esc_html($label) . '<br>';
+                                echo '<input type="radio" name="' . esc_attr($nombre_campo) . '" value="' . esc_attr($opcion_seleccionada) . '" ' . $isChecked . ' data-format="' . $formato_papel . '"> ' . esc_html($label_sin_formato) . '<br>';
                                 echo '</label>';
                             }
                         }
-                        
+
                         echo '</div>';
                         echo '</div>';
                     }
+
                 } elseif ( $campo_objeto['type'] == 'checkbox' && $campo_objeto['name'] == 'cantidades' && $campo_objeto['name'] = 'maquina' && $campo_objeto['name'] = 'envio' && is_array($valor) ) {
                 // no hacemos nada
                 }
@@ -78,6 +87,7 @@ function mostrar_campos_acf_en_producto() {
                 foreach($valor as $fila) {
                     $alto = isset($fila['alto']) ? $fila['alto'] : '';
                     $ancho = isset($fila['ancho']) ? $fila['ancho'] : '';
+                    $formato = isset($fila['formato']) ? $fila['formato'] : '';
                     $labelRadio = "$alto x $ancho";
                     $dataLabel = "$alto"."x"."$ancho";
 
@@ -105,7 +115,7 @@ function mostrar_campos_acf_en_producto() {
                     }
                     else {
                         echo '<label class="wpcc-input-radio">';
-                        echo '<input type="radio" name="' . esc_attr($nombre_campo) . '" value="' . esc_attr($dataLabel) . '" ' . $isChecked . ' > ' . esc_html($labelRadio) . '<br>';
+                        echo '<input type="radio" name="' . esc_attr($nombre_campo) . '" data-format="'.esc_html($formato).'" value="' . esc_attr($dataLabel) . '" ' . $isChecked . ' > ('. esc_html($formato). ') ' . esc_html($labelRadio) . '<br>';
                         echo '</label>';
                     }
                 }
