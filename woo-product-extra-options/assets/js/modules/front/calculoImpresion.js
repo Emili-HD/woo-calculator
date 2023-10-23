@@ -15,14 +15,7 @@ export function customCalculoImpresion(calculosPersonalizados, tamanoRadio, nuev
 
     
     function toggleMaquinaBasedOnRadio() {
-        const hojasPorCaraRadio = document.querySelector("div[data-name='hojas_por_cara'] .wpcc-field-radios input[name=hojas_por_cara]:checked")
-        let hojasPorCara
-        if (hojasPorCaraRadio) {
-            hojasPorCara = parseInt(hojasPorCaraRadio.value)
-        }
-        // console.log('hojasPorCara', hojasPorCara);
-        
-        const selectedColorRadio = document.querySelector("div[data-name='color'] .wpcc-field-radios input[name=color]:checked");
+        const selectedColorRadio = document.querySelector("div[data-name='color'] .wpcc-field-radios input[name=color]:checked");      
 
         if (selectedColorRadio) {
             let currentValue = selectedColorRadio.value;
@@ -81,32 +74,18 @@ export function customCalculoImpresion(calculosPersonalizados, tamanoRadio, nuev
                 for (const j in calculo[i].detalles) {
                     for (const k in calculo[i].detalles[j]) {
 
+                        let cantidad = calculo[i].cantidad
                         let impresiones = calculo[i].detalles[j][k].impresiones;
-                        // console.log('impresiones', calculo[i].detalles[j][k]);
                         let produccionHora = {};
                         let tiempoImpresion = {};
                         let costeImpresion = {};
                         let importeImpresion = {};
-
-                        
                         
                         // Calculamos horasTirada y tiempoImpresion para cada propiedad del objeto impresiones
                         for (const cara in impresiones) {
                             produccionHora[cara] = impresiones[cara] / produccionHoraValor;
-                            tiempoImpresion[cara] = preparacion + produccionHora[cara];
+                            tiempoImpresion[cara] = preparacion + produccionHora[cara];                          
                             
-                            let cantidadCopias = document.querySelector("input[name=cantidad__copias");
-                            let equivalenciaMedidasCorte = data.primas.copisteria
-                            if (cantidadCopias && maquina === 'Fuji') {
-                                cantidadCopias = cantidadCopias.value
-                            } else {
-                                cantidadCopias = 1
-                            }
-                            
-                            let calculoHojas = Math.ceil((calculo[i].cantidad / hojasPorCara) * cantidadCopias )
-                            // console.log('calculoHojas', calculoHojas);
-                            console.log(equivalenciaMedidasCorte); 
-
                             for (let x in data.primas.precio_hora_producción) {
                                 if (tiempoImpresion[cara] >= parseFloat(data.primas.precio_hora_producción[x][2]) && tiempoImpresion[cara] <= parseFloat(data.primas.precio_hora_producción[x][3])) {
                                     if (productData.name == 'Copistería online') {
@@ -119,45 +98,45 @@ export function customCalculoImpresion(calculosPersonalizados, tamanoRadio, nuev
                                 }
                             }
                             
-                        } 
-
-
-                        if (!calculosPersonalizados.customCalculosImpresiones[i]) {
-                            calculosPersonalizados.customCalculosImpresiones[i] = {
-                                cantidad: calculo[i].cantidad,
-                                detalles: {}
+                            if (!calculosPersonalizados.customCalculosImpresiones[i]) {
+                                calculosPersonalizados.customCalculosImpresiones[i] = {
+                                    cantidad: cantidad,
+                                    detalles: {}
+                                };
+                            }
+        
+                            if (!calculosPersonalizados.customCalculosImpresiones[i].detalles[j]) {
+                                calculosPersonalizados.customCalculosImpresiones[i].detalles[j] = {};
+                            }
+                            
+                            // Guardar las horasTirada, tiempoImpresion, costeImpresion, y importeImpresion
+                            calculosPersonalizados.customCalculosImpresiones[i].detalles[j][k] = {
+                                produccionHora: { ...produccionHora },
+                                tiempoImpresion: { ...tiempoImpresion },
+                                costeImpresion: { ...costeImpresion },
+                                importeImpresion: { ...importeImpresion }
                             };
-                        }
-    
-                        if (!calculosPersonalizados.customCalculosImpresiones[i].detalles[j]) {
-                            calculosPersonalizados.customCalculosImpresiones[i].detalles[j] = {};
-                        }
-                        
-                        // Guardar las horasTirada, tiempoImpresion, costeImpresion, y importeImpresion
-                        calculosPersonalizados.customCalculosImpresiones[i].detalles[j][k] = {
-                            produccionHora: { ...produccionHora },
-                            tiempoImpresion: { ...tiempoImpresion },
-                            costeImpresion: { ...costeImpresion },
-                            importeImpresion: { ...importeImpresion }
-                        };
+                        } 
                     }
                 }
             }
         }
     }
-    
-    function attachColorChangeEvent() {
-        const colorRadios = document.querySelectorAll("div[data-name='color'] .wpcc-field-radios input[name=color]");
-        colorRadios.forEach(radio => {
-            radio.addEventListener('change', toggleMaquinaBasedOnRadio);
-        });
-        const hojasPorCaraRadios = document.querySelectorAll("div[data-name='hojas_por_cara'] .wpcc-field-radios input[name=hojas_por_cara]");
-        hojasPorCaraRadios.forEach(hojas => {
-            hojas.addEventListener('change', toggleMaquinaBasedOnRadio);
-        })
-    }
 
     toggleMaquinaBasedOnRadio();
-    attachColorChangeEvent();   
+    
+    function attachChangeEvent(groupName) {
+        const radios = document.querySelectorAll(`div[data-name='${groupName}'] .wpcc-field-radios input[name=${groupName}]`);
+        radios.forEach(radio => {
+            radio.addEventListener('change', toggleMaquinaBasedOnRadio);
+        });
+    }
+    
+    // Llamar a la función para los diferentes grupos
+    attachChangeEvent("color");
+    attachChangeEvent("hojas_por_cara");
+    attachChangeEvent("tamano");
+
+       
     // console.log('Cálculos personalizados:', calculosPersonalizados.getCalculos());
 }

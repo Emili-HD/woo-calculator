@@ -88,6 +88,7 @@ function mostrar_campos_acf_en_producto() {
                     $alto = isset($fila['alto']) ? $fila['alto'] : '';
                     $ancho = isset($fila['ancho']) ? $fila['ancho'] : '';
                     $formato = isset($fila['formato']) ? $fila['formato'] : '';
+                    $formatoHtml = !empty($formato) ? ' (' . $formato . ')' : '';
                     $labelRadio = "$alto x $ancho";
                     $dataLabel = "$alto"."x"."$ancho";
 
@@ -115,7 +116,7 @@ function mostrar_campos_acf_en_producto() {
                     }
                     else {
                         echo '<label class="wpcc-input-radio">';
-                        echo '<input type="radio" name="' . esc_attr($nombre_campo) . '" data-format="'.esc_html($formato).'" value="' . esc_attr($dataLabel) . '" ' . $isChecked . ' > ('. esc_html($formato). ') ' . esc_html($labelRadio) . '<br>';
+                        echo '<input type="radio" name="' . esc_attr($nombre_campo) . '" data-format="' . $formato . '" value="' . esc_attr($dataLabel) . '" ' . $isChecked . ' >' . $formatoHtml . ' ' . esc_html($labelRadio) . '<br>';
                         echo '</label>';
                     }
                 }

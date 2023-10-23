@@ -21,7 +21,20 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
         let currentValue;
 
         function toggleMaquina() {
+            // Vaciar el arreglo antes de agregar nuevos datos
+            calculosPersonalizados.calculosInicialesCopisteria.splice(0, calculosPersonalizados.calculosInicialesCopisteria.length);
+            
             const selectedColorRadio = document.querySelector("div[data-name='color'] .wpcc-field-radios input[name=color]:checked");
+            const hojasPorCaraRadio = document.querySelector("div[data-name='hojas_por_cara'] .wpcc-field-radios input[name=hojas_por_cara]:checked")
+            const selectedTanamoRadio = document.querySelector("div[data-name=tamano] .wpcc-field-radios input[name=tamano]:checked");
+            const selectedImpresionRadio = document.querySelector("div[data-name=impresion] .wpcc-field-radios input[name=impresion]:checked");
+
+            let hojasPorCara
+            if (hojasPorCaraRadio) {
+                hojasPorCara = parseInt(hojasPorCaraRadio.value)
+            }
+            // console.log('hojasPorCara', hojasPorCara);
+
             maquina = atributos.maquina.maquina[1];
             if (selectedColorRadio) {
                 currentValue = selectedColorRadio.value;
@@ -30,92 +43,97 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
                 } else {
                     maquina = atributos.maquina.maquina[0];
                 }
-                // console.log('currentValue: ', currentValue);
-            } 
-            // console.log('maquina: ', maquina);
+            
+                const cartulinasSeleccionadas = data.campos.cartulina;
+                const cantidades = atributos.cantidades.cantidades;
+                const impresion = data.campos.impresion;
+                const materiasPrimasSeleccionadas = data.primas.materias.filter(materia => {
+                    return cartulinasSeleccionadas.includes(materia[0]);
+                });
 
-            if (data.campos && data.campos.cartulina) {
-                 const cartulinasSeleccionadas = data.campos.cartulina;
-                 const cantidades = atributos.cantidades.cantidades;
-                 const impresion = data.campos.impresion;   
-                 
-                //  console.log(data.primas.materias);
+                let tamanos = [];
+                if (data.campos.tamano) {
+                    tamanos = data.campos.tamano.map(tam => ({
+                        ancho: tam.ancho,
+                        alto: tam.alto,
+                    }));
+                }
 
-                 
-                 const materiasPrimasSeleccionadas = data.primas.materias.filter(materia => {
-                     return cartulinasSeleccionadas.includes(materia[0]);
-                    });
-                    
-                    let tamanos = [];
-                    if (data.campos.tamano) {
-                        tamanos = data.campos.tamano.map(tam => ({
-                            ancho: tam.ancho,
-                            alto: tam.alto,
-                        }));
-                    }
-                    
-                    // Vaciar el arreglo antes de agregar nuevos datos
-                    calculosPersonalizados.calculosInicialesCopisteria.splice(0, calculosPersonalizados.calculosInicialesCopisteria.length);
-                    
-                    const cantidadesNumericas = cantidades.map(cantidad => parseInt(cantidad));
+                const cantidadesNumericas = cantidades.map(cantidad => parseInt(cantidad));
                 
-                    cantidadesNumericas.forEach(cantidad => {
-                        const detallesCantidad = {};
-                        materiasPrimasSeleccionadas.forEach((materiaPrima) => {
-                            tamanos.forEach((tam) => {
-                                const copisteria = data.primas.copisteria
-                                // console.log(copisteria);
-                                for (const i in copisteria) {
-                                    if (maquina === copisteria[i][0]) {
-                                        // console.log(copisteria[i]);
-                                        if (copisteria[i][2] === tam.alto) {
-                                            // console.log(copisteria[i][2], tam.ancho);
-                                            const originales = copisteria[i][3]
-                                            const corte = copisteria[i][5]
-                                            const tirada = Math.ceil(cantidad / originales);
+                cantidadesNumericas.forEach(cantidad => {
+                    const detallesCantidad = {};
 
-                                            // console.log('tirada:', cantidad, originales);
+                    materiasPrimasSeleccionadas.forEach((materiaPrima) => {
+                        tamanos.forEach((tam) => {
+                            const copisteria = data.primas.copisteria
+                            // console.log(copisteria);
+                            
+                            for (const i in copisteria) {
+                                if (maquina === copisteria[i][0]) {
+                                    let cantidadCopias = document.querySelector("input[name=cantidad__copias]")
+                                    let formatoSeleccionado = selectedTanamoRadio.dataset.format;
+                                    let copias = parseInt(cantidadCopias.value);
+                                    // console.log(copisteria[i]);
 
-                                            let impresiones = {};
-                                            impresion.forEach((cara) => {
-                                                const label = `${cara}cara${cara > 1 ? 's' : ''}`;
+                                    if (copisteria[i][1] === tam.ancho && copisteria[i][2] === tam.alto) {
+                                        // console.log(copisteria[i][2], tam.ancho);
+                                        const originales = copisteria[i][3]
+                                        const corte = copisteria[i][5]
+                                        const tirada = Math.ceil(cantidad / hojasPorCara) * originales * copias;
+
+                                        // console.log('tirada:', cantidad, hojasPorCara, originales, copias);
+
+                                        let impresiones = {};
+                                        impresion.forEach((cara) => {
+                                            const label = `${cara}cara${cara > 1 ? 's' : ''}`;
+                                            if (parseInt(selectedImpresionRadio.value) === 1 && formatoSeleccionado === 'A3' && maquina === 'Fuji'){
+                                                impresiones[label] = parseInt(cara) * tirada * 2;
+                                            } else {
                                                 impresiones[label] = parseInt(cara) * tirada;
-                                            });
-                        
-                                            if (!detallesCantidad[materiaPrima[0]]) {
-                                                detallesCantidad[materiaPrima[0]] = {};
                                             }
-                        
-                                            const tamanoKey = `${tam.alto}x${tam.ancho}`;
-                                            detallesCantidad[materiaPrima[0]][tamanoKey] = {
-                                                orig: originales,
-                                                hojas: tirada,
-                                                impresiones: impresiones,
-                                                corte: corte
-                                            };
+                                        });
+
+                                        // console.log(impresiones);
+                    
+                                        if (!detallesCantidad[materiaPrima[0]]) {
+                                            detallesCantidad[materiaPrima[0]] = {};
                                         }
+                    
+                                        const tamanoKey = `${tam.alto}x${tam.ancho}`;
+                                        detallesCantidad[materiaPrima[0]][tamanoKey] = {
+                                            orig: originales,
+                                            hojas: tirada,
+                                            impresiones: impresiones,
+                                            corte: corte
+                                        };
                                     }
                                 }
-                            });
-                        });
-            
-                        calculosPersonalizados.calculosInicialesCopisteria.push({
-                            cantidad: cantidad,
-                            detalles: detallesCantidad
+                            }
+
                         });
                     });
-             }
+        
+                    calculosPersonalizados.calculosInicialesCopisteria.push({
+                        cantidad: cantidad,
+                        detalles: detallesCantidad
+                    });
+                });
+            }
         }
         
-        function attachMaquinaChangeEvent() {
-            const colorRadios = document.querySelectorAll("div[data-name='color'] .wpcc-field-radios input[name=color]");
-            
-            colorRadios.forEach(radio => {
+        toggleMaquina()
+
+        function attachChangeEvent(groupName) {
+            const radios = document.querySelectorAll(`div[data-name='${groupName}'] .wpcc-field-radios input[name=${groupName}]`);
+            radios.forEach(radio => {
                 radio.addEventListener('change', toggleMaquina);
             });
         }
         
-        toggleMaquina()
-        attachMaquinaChangeEvent()
+        // Llamar a la función para los diferentes grupos
+        attachChangeEvent("color");
+        attachChangeEvent("hojas_por_cara");
+        attachChangeEvent("tamano");
     }
 }

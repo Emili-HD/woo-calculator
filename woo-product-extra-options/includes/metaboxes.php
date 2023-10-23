@@ -73,7 +73,7 @@ function wpcc_options_meta_box_callback($post) {
         'espiral' => ['referencia_espiral', 'titulo_espiral', 'color_espiral', 'formato_espiral', 'margen_espiral', 'capacidad_hojas_espiral', 'precio_costo_espiral'],
         'tapas' => ['referencia_tapas', 'titulo_tapas', 'formato_tapas', 'margen_tapas', 'precio_costo_tapas'],
         'grapas' => ['referencia_grapas', 'titulo_grapas', 'formato_grapas', 'margen_grapas', 'precio_costo_grapas'],
-        'copisteria' => ['impresora', 'ancho_papel', 'alto_papel', 'eq_papel', 'eq_impresion', 'cortes_hoja'],
+        'copisteria' => ['impresora', 'ancho_papel', 'alto_papel', 'eq_papel', 'eq_impresion', 'cortes_hoja', 'din'],
     ];
 
     
@@ -106,7 +106,7 @@ function save_wpcc_options($post_id, $post, $update) {
         'espiral' => ['referencia_espiral', 'titulo_espiral', 'color_espiral', 'formato_espiral', 'margen_espiral', 'capacidad_hojas_espiral', 'precio_costo_espiral'],
         'tapas' => ['referencia_tapas', 'titulo_tapas', 'formato_tapas', 'margen_tapas', 'precio_costo_tapas'],
         'grapas' => ['referencia_grapas', 'titulo_grapas', 'formato_grapas', 'margen_grapas', 'precio_costo_grapas'],
-        'copisteria' => ['impresora', 'ancho_papel', 'alto_papel', 'eq_papel', 'eq_impresion', 'cortes_hoja'],
+        'copisteria' => ['impresora', 'ancho_papel', 'alto_papel', 'eq_papel', 'eq_impresion', 'cortes_hoja', 'din'],
     ];
 
     foreach ($fields as $field_name => $sub_fields) {

@@ -35,45 +35,49 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
         seleccionarPrimerRadio()
 
-        const tamanoGroup = document.querySelector(".wpcc-group-radios[data-name=tamano]");
-        const cartulinaGroup = document.querySelector('div[data-name=cartulina] .wpcc-field-radios');
 
-        // Agrega un evento change a los radios del grupo "tamano"
-        tamanoGroup.addEventListener("change", function() {
-            // Obtiene el valor del radio seleccionado
-            let selectedTamano = tamanoGroup.querySelector("input[name='tamano']:checked").getAttribute("data-format");
 
-            // Recorre los radios en el grupo "cartulina" y muestra u oculta según el valor seleccionado
-            var cartulinaRadios = cartulinaGroup.querySelectorAll("input[name='cartulina']");
-            let firstVisibleRadio = null;
+        if (productData.name == 'Copistería online') { 
+            const tamanoGroup = document.querySelector(".wpcc-group-radios[data-name=tamano]");
+            const cartulinaGroup = document.querySelector('div[data-name=cartulina] .wpcc-field-radios');
 
-            cartulinaRadios.forEach(function(radio) {
-                let format = radio.getAttribute("data-format");
-                let parent = radio.parentElement;
+            // Agrega un evento change a los radios del grupo "tamano"
+            tamanoGroup.addEventListener("change", function() {
+                // Obtiene el valor del radio seleccionado
+                let selectedTamano = tamanoGroup.querySelector("input[name='tamano']:checked").getAttribute("data-format");
 
-                const selectRadioCartulina = () => {
-                    if (!firstVisibleRadio) {
-                        firstVisibleRadio = radio;
-                        firstVisibleRadio.checked = true;
+                // Recorre los radios en el grupo "cartulina" y muestra u oculta según el valor seleccionado
+                var cartulinaRadios = cartulinaGroup.querySelectorAll("input[name='cartulina']");
+                let firstVisibleRadio = null;
+
+                cartulinaRadios.forEach(function(radio) {
+                    let format = radio.getAttribute("data-format");
+                    let parent = radio.parentElement;
+
+                    const selectRadioCartulina = () => {
+                        if (!firstVisibleRadio) {
+                            firstVisibleRadio = radio;
+                            firstVisibleRadio.checked = true;
+                        }
                     }
-                }
+                    
+                    if ((selectedTamano === "A4" || selectedTamano === "A5" || selectedTamano === "A6") && format === "A4") {
+                        parent.style.display = "block";
+                        selectRadioCartulina()
+                    } else if ((selectedTamano === "A3" || selectedTamano === "SRA3") && (format === "A3" || format === "SRA3")) {
+                        parent.style.display = "block";
+                        selectRadioCartulina()
+                    } else {
+                        parent.style.display = "none";
+                    }
+                });
+
                 
-                if ((selectedTamano === "A4" || selectedTamano === "A5" || selectedTamano === "A6") && format === "A4") {
-                    parent.style.display = "block";
-                    selectRadioCartulina()
-                } else if ((selectedTamano === "A3" || selectedTamano === "SRA3") && (format === "A3" || format === "SRA3")) {
-                    parent.style.display = "block";
-                    selectRadioCartulina()
-                } else {
-                    parent.style.display = "none";
-                }
             });
-
             
-        });
-
-        // Ejecuta el evento change inicialmente para reflejar el estado inicial
-        tamanoGroup.dispatchEvent(new Event("change"));
+            // Ejecuta el evento change inicialmente para reflejar el estado inicial
+            tamanoGroup.dispatchEvent(new Event("change"));
+        }
 
         const nuevaCantidad = parseInt(document.querySelector("input.custom__quantity").value);
         let cantidadCopias = document.querySelector("input.cantidad__copias");
@@ -428,7 +432,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         // Obtener los valores de alto y ancho del usuario
         const calcularCantidadBtn = document.querySelector('#calcularCantidad');
         const cantidadInput = document.querySelector('#customQuantityInput');
-        const copiasInput = document.querySelector('#cantidadCopiasInput');
+        // const copiasInput = document.querySelector('#cantidadCopiasInput');
         
         // Función para recalcular tamaños personalizados
         // Variables para almacenar los valores previos de alto y ancho
@@ -487,7 +491,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         function recalcularTamanos() {
             const nuevaCantidad = parseInt(cantidadInput.value);
-            const cantidadCopias = parseInt(copiasInput.value)
+            // const cantidadCopias = parseInt(copiasInput.value)
             
             const altoInput = document.querySelector("input[name='alto']");
             const anchoInput = document.querySelector("input[name='ancho']");
@@ -511,7 +515,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         
         function recalcularCantidades() {
             const nuevaCantidad = parseInt(cantidadInput.value);
-            const cantidadCopias = parseInt(copiasInput.value);
+            // const cantidadCopias = parseInt(copiasInput.value);
             
             if (!isNaN(nuevaCantidad) && nuevaCantidad >= 0) {
                 // Verificar si ya existe el th para la cantidad personalizada
