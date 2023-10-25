@@ -31,9 +31,13 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
 
             let hojasPorCara
             if (hojasPorCaraRadio) {
-                hojasPorCara = parseInt(hojasPorCaraRadio.value)
+                if (parseInt(hojasPorCaraRadio.value) !== 3) {
+                    hojasPorCara = parseInt(hojasPorCaraRadio.value)
+                } else {
+                    hojasPorCara = parseInt(hojasPorCaraRadio.value) - 1
+                }
             }
-            // console.log('hojasPorCara', hojasPorCara);
+            console.log('hojasPorCara', hojasPorCara);
 
             maquina = atributos.maquina.maquina[1];
             if (selectedColorRadio) {

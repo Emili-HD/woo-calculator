@@ -35,49 +35,75 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
         seleccionarPrimerRadio()
 
-
-
         if (productData.name == 'Copistería online') { 
-            const tamanoGroup = document.querySelector(".wpcc-group-radios[data-name=tamano]");
-            const cartulinaGroup = document.querySelector('div[data-name=cartulina] .wpcc-field-radios');
 
+            /* ************************************************************************* */
+            /* Con este fragmento mostramos y ocultamos los radiobuttons según su medida 
+             y seleccionamos el primer radio visible de cada grupo al realizar el cambio */
+            /* ************************************************************************* */
+
+            const tamanoGroup = document.querySelector(".wpcc-group-radios[data-name=tamano]");
+        
             // Agrega un evento change a los radios del grupo "tamano"
             tamanoGroup.addEventListener("change", function() {
                 // Obtiene el valor del radio seleccionado
-                let selectedTamano = tamanoGroup.querySelector("input[name='tamano']:checked").getAttribute("data-format");
-
-                // Recorre los radios en el grupo "cartulina" y muestra u oculta según el valor seleccionado
-                var cartulinaRadios = cartulinaGroup.querySelectorAll("input[name='cartulina']");
-                let firstVisibleRadio = null;
-
-                cartulinaRadios.forEach(function(radio) {
-                    let format = radio.getAttribute("data-format");
-                    let parent = radio.parentElement;
-
-                    const selectRadioCartulina = () => {
-                        if (!firstVisibleRadio) {
-                            firstVisibleRadio = radio;
-                            firstVisibleRadio.checked = true;
+                const selectedTamano = tamanoGroup.querySelector("input[name='tamano']:checked").getAttribute("data-format");
+        
+                // Recorre los radios con atributo data-format con valor definido y muestra u oculta según el valor seleccionado
+                const allGroups = document.querySelectorAll(".wpcc-field-radios");
+                const firstVisibleRadios = new Map();
+        
+                allGroups.forEach(group => {
+                    const inputRadios = group.querySelectorAll("input[type=radio]:not([name=tamano])");
+        
+                    const filteredInputRadios = [];
+        
+                    inputRadios.forEach(input => {
+                        const dataFormatValue = input.getAttribute('data-format');
+                        if (dataFormatValue !== null && dataFormatValue !== "") {
+                            filteredInputRadios.push(input);
                         }
-                    }
-                    
-                    if ((selectedTamano === "A4" || selectedTamano === "A5" || selectedTamano === "A6") && format === "A4") {
-                        parent.style.display = "block";
-                        selectRadioCartulina()
-                    } else if ((selectedTamano === "A3" || selectedTamano === "SRA3") && (format === "A3" || format === "SRA3")) {
-                        parent.style.display = "block";
-                        selectRadioCartulina()
-                    } else {
-                        parent.style.display = "none";
+                    });
+        
+                    let firstVisibleRadio = null;
+        
+                    filteredInputRadios.forEach(function(radio) {
+                        let format = radio.getAttribute("data-format");
+                        let parent = radio.parentElement;
+        
+                        const selectRadios = () => {
+                            if (!firstVisibleRadio) {
+                                firstVisibleRadio = radio;
+                                firstVisibleRadio.checked = true;
+                            }
+                        }
+        
+                        if ((selectedTamano === "A4" || selectedTamano === "A5" || selectedTamano === "A6") && format === "A4") {
+                            parent.style.display = "block";
+                            selectRadios();
+                        } else if ((selectedTamano === "A3" || selectedTamano === "SRA3") && (format === "A3" || format === "SRA3")) {
+                            parent.style.display = "block";
+                            selectRadios();
+                        } else {
+                            parent.style.display = "none";
+                        }
+                    });
+                    if (firstVisibleRadio) {
+                        firstVisibleRadios.set(group, firstVisibleRadio);
                     }
                 });
-
-                
+        
+                // Aquí puedes acceder a los primeros radios visibles de cada grupo utilizando el mapa firstVisibleRadios
+                firstVisibleRadios.forEach((firstVisibleRadio, group) => {
+                    // Realiza cualquier operación adicional con el primer radio visible del grupo
+                    console.log(`Grupo: ${group}, Primer radio visible: ${firstVisibleRadio}`);
+                });
             });
-            
+        
             // Ejecuta el evento change inicialmente para reflejar el estado inicial
             tamanoGroup.dispatchEvent(new Event("change"));
         }
+        
 
         const nuevaCantidad = parseInt(document.querySelector("input.custom__quantity").value);
         let cantidadCopias = document.querySelector("input.cantidad__copias");
