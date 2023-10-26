@@ -29,6 +29,7 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
             const selectedTanamoRadio = document.querySelector("div[data-name=tamano] .wpcc-field-radios input[name=tamano]:checked");
             const selectedImpresionRadio = document.querySelector("div[data-name=impresion] .wpcc-field-radios input[name=impresion]:checked");
 
+            let totalImpresiones
             let hojasPorCara
             if (hojasPorCaraRadio) {
                 if (parseInt(hojasPorCaraRadio.value) !== 3) {
@@ -37,7 +38,7 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
                     hojasPorCara = parseInt(hojasPorCaraRadio.value) - 1
                 }
             }
-            console.log('hojasPorCara', hojasPorCara);
+            // console.log('hojasPorCara', hojasPorCara);
 
             maquina = atributos.maquina.maquina[1];
             if (selectedColorRadio) {
@@ -79,6 +80,12 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
                                     let formatoSeleccionado = selectedTanamoRadio.dataset.format;
                                     let copias = parseInt(cantidadCopias.value);
                                     // console.log(copisteria[i]);
+
+                                    totalImpresiones = copias
+                                    if (cantidadCopias) {
+                                        totalImpresiones = cantidad * copias
+                                    }
+                                    // console.log(totalImpresiones);
 
                                     if (copisteria[i][1] === tam.ancho && copisteria[i][2] === tam.alto) {
                                         // console.log(copisteria[i][2], tam.ancho);

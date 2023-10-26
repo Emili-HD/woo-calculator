@@ -260,6 +260,37 @@ function vicode_create_field() {
 add_action( 'woocommerce_product_options_general_product_data', 'vicode_create_field' );
 
 
+function my_admin_only_render_field_settings( $field ) {
+    acf_render_field_setting( $field, array(
+        'label'        => __( 'Familia', 'my-textdomain' ),
+        'instructions' => '',
+        'name'         => 'familia',
+        'type'         => 'text',
+        'ui'           => 1,
+    ), true ); 
+    acf_render_field_setting( $field, array(
+        'label'        => __( 'Order', 'my-textdomain' ),
+        'instructions' => '',
+        'name'         => 'order',
+        'type'         => 'number',
+        'ui'           => 1,
+    ), true ); 
+}
+add_action( 'acf/render_field_settings', 'my_admin_only_render_field_settings' );
+
+function my_admin_only_prepare_field( $field ) {
+    // Bail early if no 'admin_only' setting or if set to false.
+    if ( empty( $field['familia'] ) ) {
+        return $field;
+    }
+    if ( empty( $field['order'] ) ) {
+        return $field;
+    }
+
+    // Return the original field otherwise.
+    return $field;
+}
+add_filter( 'acf/prepare_field', 'my_admin_only_prepare_field' );
 
 /* // save data from custom field
 function vicode_save_field_data( $post_id ) {

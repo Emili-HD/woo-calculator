@@ -11,13 +11,20 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
 
     if ( encuadernadoRadio ) {
     
-        let maquina = 0;
-        let preparacion = 0;
-        let produccionHoraValor = 0;
-    
         function toggleMaquinaBasedOnRadio() {
+            let maquina = 0;
+            let preparacion = 0;
+            let produccionHoraValor = 0;
             
             const selectedColorRadio = document.querySelector("div[data-name='color'] .wpcc-field-radios input[name=color]:checked");
+            const amortizacionMaquina = data.primas.amortizacion;
+            const papelSeleccionado = data.primas.books
+            const margenPapel = data.primas.margen_papel
+            const burcarValorTapas = data.primas.tapas
+            const preparacionMaquina = data.primas.preparacion_maquina;
+            const espirales = data.primas.espiral;
+            const escaladoEncuadernado = data.primas.escalado_encuadernacion;
+            const manipulado = data.primas.tiempo_manipulado[12][0];
     
             if (selectedColorRadio) {
                 let currentValue = selectedColorRadio.value;
@@ -28,9 +35,6 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                     maquina = atributos.maquina.maquina[0];
                 }
     
-                const preparacionMaquina = data.primas.preparacion_maquina;
-                var preparacion = 0;
-                
                 for (const i in preparacionMaquina) {
                     if (maquina === preparacionMaquina[i][0]) {
                         preparacion = parseFloat(preparacionMaquina[i][1]);
@@ -38,10 +42,8 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                     }
                 }
     
-                var produccionHoraValor = 0;
                 var amortizacion = 0;
                 var amortizacionMantenimiento = 0;
-                const amortizacionMaquina = data.primas.amortizacion;
                 for (let i in amortizacionMaquina) {
                     if (maquina === amortizacionMaquina[i][0]) {
                         amortizacion = parseFloat(amortizacionMaquina[i][1]);
@@ -52,10 +54,9 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                 }
             } else {
                 maquina = atributos.maquina.maquina[0];
-                preparacion = parseFloat(data.primas.preparacion_maquina[1][1])
+                preparacion = parseFloat(preparacionMaquina[1][1])
                 
                 // Buscar produccionHora basado en la máquina
-                const amortizacionMaquina = data.primas.amortizacion;
                 for (let i in amortizacionMaquina) {
                     if (maquina === amortizacionMaquina[i][0]) {
                         amortizacion = parseFloat(amortizacionMaquina[i][1]);
@@ -78,7 +79,6 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                     for (const j in calculo[i].detalles) {
                         for (const k in calculo[i].detalles[j]) {
                                 
-                            const espirales = data.primas.espiral;
                             let paginasDocumento = calculo[i].cantidad;
                             let impresionCara = document.querySelector('input[name=impresion]:checked').value;
                             
@@ -100,7 +100,7 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                                     }
                                 }
 
-                                // Después del bucle, imprimimos el último elemento que cumple la condición
+                                // Después del bucle espiral, imprimimos el último elemento que cumple la condición
                                 if (precioEspiral) {
                                     precioEspiral = precioEspiral[6];
                                 }
@@ -114,40 +114,92 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                                 const cantidadCopias = document.querySelector('input[name=cantidad__copias]');
                                 const tapaFrontalInput = document.querySelector('input[name=tapa_frontal]:checked');
                                 const tapaTraseraInput = document.querySelector('input[name=tapa_trasera]:checked');
+                                const selectedPortadaInput = document.querySelector('input[name=portada]:checked');
+                                const selectedPapelPortadaInput = document.querySelector('input[name=papel_portada]:checked');
+                                const copias = cantidadCopias.value;
+                                const selectedPortadaValue = selectedPortadaInput.value
+                                const selectedPapelPortadaValue = selectedPapelPortadaInput.value
+
+                                let costeAmortizacionPortada = 0
+                                let costeAmortMantPortada = 0
+                                let costePapelPortada = 0
+                                let ventaPapelPortada = 0
+                                
+                                if (selectedPortadaValue === '1_cara_bn' || selectedPortadaValue === '2_caras_bn') {
+                                    for (let i in amortizacionMaquina) {
+                                        costeAmortizacionPortada = parseFloat(amortizacionMaquina[1][1]);
+                                        costeAmortMantPortada = parseFloat(amortizacionMaquina[1][5]);
+                                        if (selectedPortadaValue === '2_caras_bn') {
+                                            costeAmortizacionPortada = parseFloat(amortizacionMaquina[1][1]) * 2
+                                            costeAmortMantPortada = parseFloat(amortizacionMaquina[1][5] * 2);
+                                        }
+                                        break;
+                                    }
+                                }
+                                else if (selectedPortadaValue === '1_cara_color' || selectedPortadaValue === '2_caras_color') {
+                                    for (let i in amortizacionMaquina) {
+                                        costeAmortizacionPortada = parseFloat(amortizacionMaquina[0][1]);
+                                        costeAmortMantPortada = parseFloat(amortizacionMaquina[0][5]);
+                                        if (selectedPortadaValue === '2_caras_color') {
+                                            costeAmortizacionPortada = parseFloat(amortizacionMaquina[0][1]) * 2
+                                            costeAmortMantPortada = parseFloat(amortizacionMaquina[0][5] * 2);
+                                        }
+                                        break;
+                                    }
+                                }
+
+                                for (let i in papelSeleccionado) {
+                                    if(selectedPapelPortadaValue == papelSeleccionado[i][0]) {
+                                        costePapelPortada = parseFloat(papelSeleccionado[i][2]) * copias
+                                        break;
+                                    }
+                                }
+                                // console.log('costePapelPortada', selectedPapelPortadaValue, costePapelPortada);
+
                                 function handleCalculoTapaFrontal() {
-                                    let copias = cantidadCopias.value;
                                     let tapaFrontal = tapaFrontalInput.value
                                     let tapaTrasera = tapaTraseraInput.value
-                                    costeTapaFrontal = copias * 0.09;
-                                    costeTapaTrasera = copias * 0.12;
+                                    let precioTapaFrontal = null
+                                    let precioTapaTrasera = null
 
-                                    console.log(tapaFrontal);
+                                    
+                                    for (const i in burcarValorTapas) {
+                                        if (tapaFrontal === burcarValorTapas[i][0]) {
+                                            precioTapaFrontal = burcarValorTapas[i][4]
+                                        }
+                                        if (tapaTrasera === burcarValorTapas[i][0]) {
+                                            precioTapaTrasera = burcarValorTapas[i][4]
+                                        }
+                                    }
 
-                                    for (let j in data.primas.margen_papel) {
-                                        if (copias >= data.primas.margen_papel[j][0] && copias <= data.primas.margen_papel[j][1]) {
-                                            const margen = data.primas.margen_papel[j][2];
+                                    // console.log('precio tapas:', precioTapaFrontal, precioTapaTrasera);
+                                    
+                                    costeTapaFrontal = copias * precioTapaFrontal;
+                                    costeTapaTrasera = copias * precioTapaTrasera;
+
+                                    for (let j in margenPapel) {
+                                        if (copias >= margenPapel[j][0] && copias <= margenPapel[j][1]) {
+                                            const margen = margenPapel[j][2];
 
                                             ventaTapaFrontal = (costeTapaFrontal * 2 * margen) / 100
                                             ventaTapaTrasera = (costeTapaTrasera * 2 * margen) / 100
+                                            ventaPapelPortada = (costePapelPortada * 2 * margen) / 100
                                             break;
                                         }
                                     }
                                 }
                                 handleCalculoTapaFrontal()
-                                cantidadCopias.addEventListener('input', handleCalculoTapaFrontal);
+                                cantidadCopias.addEventListener('input', handleCalculoTapaFrontal);                                
                                 
-                                
-                                const manipulado = data.primas.tiempo_manipulado[12][0];
                                 // const cantidadHojas = calculo[i].detalles[j][k].hojas
                                 // for (const i in calculo) {
 
-                                    const cantidadHojas = calculo[i].cantidad;
+                                    // const cantidadHojas = calculo[i].cantidad;
                                     
                                     let tiempoProduccionEncuadernado = paginasDocumento / manipulado
                                     let costeEncuadernado = tiempoProduccionEncuadernado * 12
                                     // console.log(calculo[i].cantidad, cantidadHojas, manipulado);
                                     
-                                    const escaladoEncuadernado = data.primas.escalado_encuadernacion
                                     let importeEncuadernado = 0
                                     function handleImporteEncuadernado() {
                                         const copias = parseInt(cantidadCopias.value);
@@ -166,10 +218,9 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                                     handleImporteEncuadernado();
                                     cantidadCopias.addEventListener('input', handleImporteEncuadernado);
     
-                                    let totalCosteEncuadernado = parseFloat(precioEspiral) + costeTapaFrontal + costeTapaTrasera + costeEncuadernado
-                                    let totalVentaEncuadernado = parseFloat(precioEspiral) + ventaTapaFrontal + ventaTapaTrasera + importeEncuadernado                             
-                                    // console.log('totalVentaEncuadernado', parseFloat(precioEspiral), ventaTapaFrontal, ventaTapaTrasera, importeEncuadernado, totalVentaEncuadernado );                             
-    
+                                    let totalCosteEncuadernado = parseFloat(precioEspiral) + costeTapaFrontal + costeTapaTrasera + ventaPapelPortada + costeEncuadernado
+                                    let totalVentaEncuadernado = parseFloat(precioEspiral) + ventaTapaFrontal + ventaTapaTrasera + ventaPapelPortada + importeEncuadernado
+                                    // console.log('totalVentaEncuadernado', totalVentaEncuadernado, parseFloat(precioEspiral), ventaTapaFrontal, ventaTapaTrasera, importeEncuadernado, totalVentaEncuadernado );
     
                                     let impresiones = calculo[i].detalles[j][k].impresiones;
                                     let importePapel = 0;
@@ -183,7 +234,7 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                                         let papelPortada = document.querySelector('input[name=papel_portada]:checked').value;
                                         // console.log(papelPortada);
     
-                                        const papelSeleccionado = data.primas.books
+                                        
                                         let copias = parseInt(cantidadCopias.value);
                                         for (let i in papelSeleccionado) {
                                             if(papelPortada == papelSeleccionado[i][0]) {
@@ -215,7 +266,7 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
         
                                     if (!calculosPersonalizados.calculosEncuadernado[i]) {
                                         calculosPersonalizados.calculosEncuadernado[i] = {
-                                            cantidad: calculo[i].cantidad,
+                                            cantidad: paginasDocumento,
                                             detalles: {}
                                         };
                                     }
@@ -229,6 +280,8 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                                         tiempoProduccionEncuadernado: tiempoProduccionEncuadernado,
                                         costePapelEncuadernado: costePapel,
                                         costeEncuadernado: costeEncuadernado,
+                                        costeAmortMantPortada: costeAmortMantPortada,
+                                        ventaPapelPortada: ventaPapelPortada,
                                         totalCosteEncuadernado: totalCosteEncuadernado,
                                         totalVentaEncuadernado: totalVentaEncuadernado,
                                         importePapel: importePapel,
@@ -255,17 +308,10 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
     
         toggleMaquinaBasedOnRadio();
 
-        function attachChangeEvent(groupName) {
-            const radios = document.querySelectorAll(`div[data-name='${groupName}'] .wpcc-field-radios input[name=${groupName}]`);
-            radios.forEach(radio => {
-                radio.addEventListener('change', toggleMaquinaBasedOnRadio);
-            });
-        }
-        
-        // Llamar a la función para los diferentes grupos
-        attachChangeEvent("color");
-        attachChangeEvent("tapa_frontal");
-        attachChangeEvent("tapa_trasera");
+        // Agrega un evento change a todos los radios en el documento
+        document.querySelectorAll("input[type=radio]").forEach(radio => {
+            radio.addEventListener('change', toggleMaquinaBasedOnRadio);
+        });
     
     }
 }

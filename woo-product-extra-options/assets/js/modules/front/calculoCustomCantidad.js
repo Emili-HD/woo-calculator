@@ -33,10 +33,10 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
             calculo = calculosPersonalizados.customCalculosIniciales
             // console.log('calculoIniciales:', calculo);
         }
+        // console.log(nuevaCantidad);
 
         // Reiniciar el objeto detallesCantidad antes de calcular los detalles para la nueva cantidad
         const detallesCantidad = {};
-
 
         // Recorrer el objeto calculo
         for (let i in calculo) {
@@ -75,6 +75,7 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
                             }
                         } 
 
+                        
                         const copisteria = data.primas.copisteria
                         // console.log(copisteria);
                         for (const i in copisteria) {
@@ -85,7 +86,7 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
                                     let originales = copisteria[i][3]
                                     let corte = copisteria[i][5]
                                     let tirada = Math.ceil(nuevaCantidad / originales);
-
+                                    
                                     let impresiones = {};
                                     impresion.forEach((cara) => {
                                         const label = `${cara}cara${cara > 1 ? 's' : ''}`;

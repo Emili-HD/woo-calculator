@@ -93,11 +93,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     }
                 });
         
-                // Aquí puedes acceder a los primeros radios visibles de cada grupo utilizando el mapa firstVisibleRadios
+                /* // Aquí puedes acceder a los primeros radios visibles de cada grupo utilizando el mapa firstVisibleRadios
                 firstVisibleRadios.forEach((firstVisibleRadio, group) => {
                     // Realiza cualquier operación adicional con el primer radio visible del grupo
                     console.log(`Grupo: ${group}, Primer radio visible: ${firstVisibleRadio}`);
-                });
+                }); */
             });
         
             // Ejecuta el evento change inicialmente para reflejar el estado inicial
@@ -105,10 +105,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
         
 
-        const nuevaCantidad = parseInt(document.querySelector("input.custom__quantity").value);
-        let cantidadCopias = document.querySelector("input.cantidad__copias");
+        let nuevaCantidad = parseInt(document.querySelector("input.custom__quantity").value);
+        let cantidadCopias = document.querySelector("input[name=cantidad__copias]");
         if (cantidadCopias) {
             cantidadCopias = parseInt(cantidadCopias.value)
+            nuevaCantidad = nuevaCantidad * cantidadCopias
         }
 
         customCalculoInicial(calculosPersonalizados, nuevaCantidad, cantidadCopias);
@@ -146,7 +147,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         if (currentValue !== 'encuadernado') {
                             group.classList.remove('active');
                         } else {
-                            console.log('encuadernado checked');
+                            // console.log('encuadernado checked');
                             group.classList.add('active');
                         }
                     });
@@ -458,7 +459,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         // Obtener los valores de alto y ancho del usuario
         const calcularCantidadBtn = document.querySelector('#calcularCantidad');
         const cantidadInput = document.querySelector('#customQuantityInput');
-        // const copiasInput = document.querySelector('#cantidadCopiasInput');
+        const copiasInput = document.querySelector('#cantidadCopiasInput');
         
         // Función para recalcular tamaños personalizados
         // Variables para almacenar los valores previos de alto y ancho
@@ -540,8 +541,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
         
         function recalcularCantidades() {
-            const nuevaCantidad = parseInt(cantidadInput.value);
-            // const cantidadCopias = parseInt(copiasInput.value);
+            let nuevaCantidad = parseInt(cantidadInput.value);
+            let cantidadCopias;
+            if (copiasInput) {
+                cantidadCopias = parseInt(copiasInput.value);
+                nuevaCantidad = nuevaCantidad * cantidadCopias
+            }
+            console.log('nuevaCantidad', nuevaCantidad);
             
             if (!isNaN(nuevaCantidad) && nuevaCantidad >= 0) {
                 // Verificar si ya existe el th para la cantidad personalizada

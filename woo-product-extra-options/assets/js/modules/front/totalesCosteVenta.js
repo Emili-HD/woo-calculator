@@ -32,6 +32,11 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
     const cantosGroup = document.querySelector(".wpcc-group-radios[data-name=cantos]");
     const laminadoGroup = document.querySelector(".wpcc-group-radios[data-name=laminado]");
     const hendidoGroup = document.querySelector(".wpcc-group-radios[data-name=hendido]");
+
+    // Accedemos a los valores configurados en materias primas
+    const papelSeleccionado = data.primas.books
+    const precioEscaladoBn = data.primas.escalado_bn
+    const precioEscaladoColor = data.primas.escalado_color
     
     for (let i in calculosPersonalizados.customCalculosIniciales) {
         for (let j in calculosPersonalizados.customCalculosIniciales[i].detalles) {
@@ -68,7 +73,6 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                     if (cantidadCopias) {
                         valorCantidadCopias = cantidadCopias.value
                     }
-                    // console.log(valorCantidadCopias);
                     
                     /* DATOS PARA LOS CÁLCULOS */
                     /* ******************************************** */
@@ -82,12 +86,11 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                         let cartulinaInput = document.querySelector('input[name=cartulina]:checked');
                         let precioPapel = 0;
 
-                        for (let y = 0; y < data.primas.books.length; y++) {
-                            if (data.primas.books[y][0] === cartulinaInput.value && cartulinaInput.value !== 'DA4') {
-                                precioPapel = parseFloat(data.primas.books[y][2]) * paginasDocumento;
+                        for (let y in papelSeleccionado) {
+                            if (papelSeleccionado[y][0] === cartulinaInput.value && cartulinaInput.value !== 'DA4') {
+                                precioPapel = parseFloat(papelSeleccionado[y][2]) * paginasDocumento;
                             }
                         }
-                        // console.log('precioPapel', precioPapel);
 
                         let cantidadImpresiones;
                         if (impresionRadioValue === 1) {
@@ -95,11 +98,9 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                         } else {
                             cantidadImpresiones = calculo[i].detalles[j][k]?.impresiones?.['2caras'];
                         }
-                        // console.log(cantidadImpresiones);
 
                         const cantidadImpresiones1Cara = calculo[i].detalles[j][k]?.impresiones?.['1cara'];
                         const cantidadImpresiones2Caras = calculo[i].detalles[j][k]?.impresiones?.['2caras'];
-                        // console.log(cantidadImpresiones1Cara);
 
                         // TOTAL TIEMPO IMPRESIÓN
                         let impresion1Cara = calculosPersonalizados.customCalculosImpresiones[i].detalles[j][k]?.tiempoImpresion?.['1cara'] || 0;
@@ -125,37 +126,59 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                         const selectedColorRadio = document.querySelector('input[name=color]:checked');
                         const radioValue = selectedColorRadio ? selectedColorRadio.value : null;
                         
-                        const precioEscaladoBn = data.primas.escalado_bn
-                        const precioEscaladoColor = data.primas.escalado_color
-                        let precioUnitarioBn = 0;
+                        // let precioUnitarioBn = 0;
 
-                        let importePapel;
-                        // TOTAL VENTA
-                                                        
                         let totalImpresiones = paginasDocumento
                         if (cantidadCopias) {
                             totalImpresiones = cantidadImpresiones
                         }
                         
+                        let importePapel = calculosPersonalizados.customCalculosPapeles[i].detalles[j][k].importePapel || 0;     
                         if (productData.name == 'Copistería online' && radioValue === 'bn' ) {
                             for (let i in precioEscaladoBn) {
-                                const rangoInicial = parseFloat(precioEscaladoBn[i][0]);
-                                const rangoFinal = parseFloat(precioEscaladoBn[i][1]);
-                                const precio = parseFloat(precioEscaladoBn[i][2]);
+                                let rangoInicial = parseFloat(precioEscaladoBn[i][0]);
+                                let rangoFinal = parseFloat(precioEscaladoBn[i][1]);
                                 if (totalImpresiones >= rangoInicial && totalImpresiones <= rangoFinal) {
                                     importePapel = 0;
+                                } else if (totalImpresiones > rangoFinal) {
+                                    importePapel = calculosPersonalizados.customCalculosPapeles[i].detalles[j][k].importePapel || 0;
                                 }
                             }
                         } else if (productData.name == 'Copistería online' && radioValue === 'color' ) {
-                            for (let a in precioEscaladoColor) {
-                                if (totalImpresiones >= parseFloat(precioEscaladoColor[a][0]) && totalImpresiones <= parseFloat(precioEscaladoColor[a][1])) {
+                            for (let i in precioEscaladoColor) {
+                                let rangoInicial = parseFloat(precioEscaladoColor[i][0]);
+                                let rangoFinal = parseFloat(precioEscaladoColor[i][1]);
+                                if (totalImpresiones >= parseFloat(precioEscaladoColor[i][0]) && totalImpresiones <= parseFloat(precioEscaladoColor[i][1])) {
                                     importePapel = 0
+                                } else if (totalImpresiones > rangoFinal) {
+                                    importePapel = importePapel;
+                                    // console.log('importePapel', importePapel);   
+                                    
                                 }
                             }
                         }
-                        else {
-                            importePapel = calculosPersonalizados.customCalculosPapeles[i].detalles[j][k].importePapel || 0;
-                        }
+                        // else {
+                        //     importePapel = calculosPersonalizados.customCalculosPapeles[i].detalles[j][k].importePapel || 0;
+                        // }
+
+                        // console.log('importePapel', importePapel);                                                   
+                        // if (productData.name == 'Copistería online' && radioValue === 'bn') {
+                        //     const precioEscalado = radioValue === 'bn' ? precioEscaladoBn : precioEscaladoColor;
+                        //     for (let i in precioEscalado) {
+                        //         let rangoInicial = parseFloat(precioEscalado[i][0]);
+                        //         let rangoFinal = parseFloat(precioEscalado[i][1]);
+                                
+                        //         if (totalImpresiones >= rangoInicial && totalImpresiones <= rangoFinal) {
+                        //             importePapel = 0;
+                        //             break; // No es necesario seguir verificando el rango si ya se cumplió la condición
+                        //         } else if (totalImpresiones > rangoFinal) {
+                        //             importePapel = calculosPersonalizados.customCalculosPapeles[i].detalles[j][k].importePapel
+                        //         }
+                        //     }
+                        // }
+                        // else {
+                        //     importePapel = calculosPersonalizados.customCalculosPapeles[i].detalles[j][k].importePapel || 0;
+                        // }
 
                         let importeImpresion1Cara = calculosPersonalizados.customCalculosImpresiones[i].detalles[j][k]?.importeImpresion?.['1cara'] || 0;
                         let importeImpresion2Caras = calculosPersonalizados.customCalculosImpresiones[i].detalles[j][k]?.importeImpresion?.['2caras'] || 0;
@@ -164,28 +187,25 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                         let ventaLaminado = laminadoGroup ? calculosPersonalizados.customCalculosLaminados[i].detalles[j][k].ventaLaminado || 0 : 0;
                         let ventaHendido = hendidoGroup ? calculosPersonalizados.customCalculosHendidos[i].detalles.ventaHendido || 0 : 0;
 
-
-                        // CALCULO AGUJEROS
-                        let preparacionAgujeros = 0;
-                        let tiempoPreparacionAgujeros = 0;
-                        let totalTiempoAgujeros = 0;
-                        let costeTaladrar = 0;
-                        let ventaTaladrar = 0;
                         const plastificadoRadio = document.querySelector('input[name=acabado][value=plastificado]')
                         const encuadernadoRadio = document.querySelector('input[name=acabado][value=encuadernado]')
                         
+                        // CALCULO AGUJEROS
+                        const agujereadoRadio2 = document.querySelector('input[name=acabado][value=taladrar_2_agujeros]:checked')
+                        const agujereadoRadio4 = document.querySelector('input[name=acabado][value=taladrar_4_agujeros]:checked')
+                        let preparacionAgujeros = 0;
+                        let tiempoPreparacionAgujeros = 0;
+                        let totalTiempoAgujeros = 0;
+                        let costeTaladrar = 0
+                        let ventaTaladrar = 0
+
+                        if (agujereadoRadio2 || agujereadoRadio4) {
+                            costeTaladrar = calculosPersonalizados.calculosAgujereado[i].detalles.costeTaladrar;
+                            ventaTaladrar = calculosPersonalizados.calculosAgujereado[i].detalles.ventaTaladrar;
+                        }
+
+                        // console.log(costeTaladrar, ventaTaladrar);
                         
-                        // const acabadoRadios = document.querySelectorAll('input[name=acabado]');
-                        // const impresionRadios = document.querySelectorAll('input[name=impresion]');
-                        // const valoresPlastificado = calculosPersonalizados.calculosPlastificado
-                        // const valoresEncuadernado = calculosPersonalizados.calculosEncuadernado
-                        
-                        // Llamar a calculoTaladrar para inicializar los cálculos
-                        // calculoTaladrar();
-                        
-                        // Añadir event listeners para manejar cambios en acabadoRadios e impresionRadios
-                        // acabadoRadios.forEach(radio => radio.addEventListener('change', calculoTaladrar));
-                        // impresionRadios.forEach(radio => radio.addEventListener('change', calculoTaladrar));
 
                         // Declaramos las variables de plastificado
                         let costeFunda = 0
@@ -215,34 +235,62 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                         let costeEncuadernado = 0
                         let costeTapaFrontal = 0
                         let costeTapaTrasera = 0
+                        let costeAmortMantPortada = 0
+                        let ventaPapelPortada = 0
                         
                         // Si existe el radiobutton 'encuadernadoRadio' recogemos los datos
                         if (encuadernadoRadio && encuadernadoRadio.checked) {
                             tiempoProduccionEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].tiempoProduccionEncuadernado || 0;
+                            totalTiempoImpresion = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].totalTiempoImpresion || 0;
+
                             costePapelEncudernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].costePapelEncudernado || 0;
                             costeEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].costeEncudernado || 0;
                             costeImpresionEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].costeImpresion || 0;
-                            totalTiempoImpresion = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].totalTiempoImpresion || 0;
-                            importeImpresionEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].costeImpresion || 0;
-                            importePapelEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].costeImpresion || 0;
-                            totalCosteEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].costeImpresion || 0;
-                            totalVentaEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].costeImpresion || 0;
+                            costeAmortMantPortada = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].costeAmortMantPortada || 0;
+                            totalCosteEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].totalCosteEncuadernado || 0;
+
+                            importeImpresionEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].importeImpresion || 0;
+                            importePapelEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].importePapel || 0;
+                            totalVentaEncuadernado = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].totalVentaEncuadernado || 0;
+                            ventaPapelPortada = calculosPersonalizados.calculosEncuadernado[i].detalles[j][k].ventaPapelPortada || 0;
                         }
 
+                        /* 
+                           IMPORTANTE!!!
+                           La manera de calcular pasada en el excel no está bien estructurada, con lo que hay que recorrer multitud de opciones y sumarlas en los cálculos
+                           Sería interesante crear un total en cada script que recoja las variables implicadas. 
+                           Esto simplificaría el código y sería más fácil el mantenimiento
+                        */
+
+
                         if (productData.name == 'Copistería online') {
+                            // ventaPapelPortada = ventaPapelPortada * valorCantidadCopias
                             // TOTAL TIEMPO PRODUCCIÓN
                             totalTiempoProduccion['1cara'] = impresion1Cara + tiempoCorte + totalTiempoAgujeros + tiempoProduccionEncuadernado + totalTiempoImpresion + tiempoProduccionPlastificado;
                             totalTiempoProduccion['2caras'] = impresion2Caras + tiempoCorte + totalTiempoAgujeros + tiempoProduccionEncuadernado + totalTiempoImpresion + tiempoProduccionPlastificado;
                                     
                             // TOTAL COSTE
-                            totalCoste['1cara'] = costeAmortizacion1Cara + costePapel + costeImpresionEncuadernado + costePapelEncudernado + totalCosteEncuadernado + costeCorte + costeGrapado + costeTaladrar + costeFunda + costePlastificado;
-                            totalCoste['2caras'] = costeAmortizacion2Caras + costePapel + costeImpresionEncuadernado + costePapelEncudernado + totalCosteEncuadernado + costeCorte + costeGrapado + costeTaladrar + costeFunda + costePlastificado;
+                            totalCoste['1cara'] = costeAmortizacion1Cara + costePapel + costeImpresionEncuadernado + costePapelEncudernado + costeAmortMantPortada + totalCosteEncuadernado + costeCorte + costeGrapado + costeTaladrar + costeFunda + costePlastificado;
+                            totalCoste['2caras'] = costeAmortizacion2Caras + costePapel + costeImpresionEncuadernado + costePapelEncudernado + costeAmortMantPortada + totalCosteEncuadernado + costeCorte + costeGrapado + costeTaladrar + costeFunda + costePlastificado;
 
                             // TOTAL COSTE SIN AMORTIZACIÓN
                             totalCosteSinAmortizacion['1cara'] = totalCoste['1cara'] - costeAmortizacion1Cara;
                             totalCosteSinAmortizacion['2caras'] = totalCoste['2caras'] - costeAmortizacion2Caras;
                         
-                            // console.log(precioEscaladoBn);
+                            // totalVentaSinAcabados['1cara'] = costeAmortizacion1Cara + importePapel + importeImpresion1Cara + importeCorte + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                            // totalVentaSinAcabados['2caras'] = costeAmortizacion2Caras + importePapel + importeImpresion2Caras + importeCorte + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                            
+                            // // TOTAL VENTA SIN CANTOS
+                            // totalVentaSinCantos['1cara'] = 0;
+                            // totalVentaSinCantos['2caras'] = 0;
+        
+                            // // TOTAL VENTA SIN LAMINADO
+                            // totalVentaSinLaminado['1cara'] = 0;
+                            // totalVentaSinLaminado['2caras'] = 0;
+        
+                            // // TOTAL VENTA
+                            // totalVenta['1cara'] = costeAmortizacion1Cara + importePapel + importeImpresion1Cara + importeCorte + importeCantos + ventaLaminado + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                            // totalVenta['2caras'] = costeAmortizacion2Caras + importePapel + importeImpresion2Caras + importeCorte + importeCantos + ventaLaminado + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
 
                             if (radioValue === 'bn') {
                                 for (let i in precioEscaladoBn) {
@@ -250,12 +298,13 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                                     const rangoFinal = parseFloat(precioEscaladoBn[i][1]);
                                     const precio = parseFloat(precioEscaladoBn[i][2]);
 
+                                    // console.log(totalImpresiones);
+
                                     if (totalImpresiones >= rangoInicial && totalImpresiones <= rangoFinal) {
-                                        // console.log(totalImpresiones, parseFloat(precioEscaladoBn[i][0]), parseFloat(precioEscaladoBn[i][1]), parseFloat(precioEscaladoBn[i][2]));
                                         // TOTAL VENTA SIN ACABADOS
-                                        totalVentaSinAcabados['1cara'] = precio * totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado;
-                                        totalVentaSinAcabados['2caras'] = precio * 2 * totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado;
-                                        
+                                        totalVentaSinAcabados['1cara'] = precio * (totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
+                                        totalVentaSinAcabados['2caras'] = precio * 2 * (totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
+                                        // console.log(totalImpresiones , precioPapel , importePapel , importeFunda , importePlastificado , importeGrapado , ventaTaladrar , ventaPapelPortada , totalVentaEncuadernado , importeImpresionEncuadernado , importePapelEncuadernado);
                                         // TOTAL VENTA SIN CANTOS
                                         totalVentaSinCantos['1cara'] = 0
                                         totalVentaSinCantos['2caras'] = 0
@@ -269,11 +318,29 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                                         totalVenta['2caras'] = precio * 2 * totalImpresiones + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado;
                                         
                                         break;
-                                    } 
-                                    if (precioUnitarioBn === 0) {
+                                    }
+                                    if (totalImpresiones > 2000) {
                                         // TOTAL VENTA SIN ACABADOS
-                                        totalVentaSinAcabados['1cara'] = valorCantidadCopias * (costeAmortizacion1Cara + importePapel + importeImpresion1Cara + importeCorte + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
-                                        totalVentaSinAcabados['2caras'] = valorCantidadCopias * (costeAmortizacion2Caras + importePapel + importeImpresion2Caras + importeCorte + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
+                                        totalVentaSinAcabados['1cara'] = costeAmortizacion1Cara + importePapel + importeImpresion1Cara + importeCorte + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                                        totalVentaSinAcabados['2caras'] = costeAmortizacion2Caras + importePapel + importeImpresion2Caras + importeCorte + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                                        // console.log(costeAmortizacion1Cara, importePapel, importeImpresion1Cara, importeCorte, ventaHendido, importeGrapado, ventaTaladrar);
+                                        
+                                        // TOTAL VENTA SIN CANTOS
+                                        totalVentaSinCantos['1cara'] = 0;
+                                        totalVentaSinCantos['2caras'] = 0;
+                    
+                                        // TOTAL VENTA SIN LAMINADO
+                                        totalVentaSinLaminado['1cara'] = 0;
+                                        totalVentaSinLaminado['2caras'] = 0;
+                    
+                                        // TOTAL VENTA
+                                        totalVenta['1cara'] = costeAmortizacion1Cara + importePapel + importeImpresion1Cara + importeCorte + importeCantos + ventaLaminado + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                                        totalVenta['2caras'] = costeAmortizacion2Caras + importePapel + importeImpresion2Caras + importeCorte + importeCantos + ventaLaminado + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                                    }
+                                    /* if (precioUnitarioBn === 0) {
+                                        // TOTAL VENTA SIN ACABADOS
+                                        totalVentaSinAcabados['1cara'] = valorCantidadCopias * (totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
+                                        totalVentaSinAcabados['2caras'] = valorCantidadCopias * (totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
                                         
                                         // TOTAL VENTA SIN CANTOS
                                         totalVentaSinCantos['1cara'] = 0
@@ -284,12 +351,16 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                                         totalVentaSinLaminado['2caras'] = 0
                                         
                                         // TOTAL VENTA
-                                        totalVenta['1cara'] = valorCantidadCopias * (costeAmortizacion1Cara + importePapel + importeImpresion1Cara + importeCorte + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
-                                        totalVenta['2caras'] = valorCantidadCopias * (costeAmortizacion2Caras + importePapel + importeImpresion2Caras + importeCorte + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
-                                    }
+                                        totalVenta['1cara'] = valorCantidadCopias * (totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
+                                        totalVenta['2caras'] = valorCantidadCopias * (totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
+                                    } */
                                 }
                             } else if (radioValue === 'color') {
                                 for (let a in precioEscaladoColor) {
+                                    const rangoInicial = parseFloat(precioEscaladoColor[a][0]);
+                                    const rangoFinal = parseFloat(precioEscaladoColor[a][1]);
+                                    const precio = parseFloat(precioEscaladoColor[a][2]);
+
                                     if (totalImpresiones >= parseFloat(precioEscaladoColor[a][0]) && totalImpresiones <= parseFloat(precioEscaladoColor[a][1])) {
                                         // console.log(totalImpresiones, parseFloat(precioEscaladoColor[i][0]), parseFloat(precioEscaladoColor[i][1]), parseFloat(precioEscaladoColor[i][2]));
                                         // TOTAL VENTA SIN ACABADOS
@@ -307,11 +378,25 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                                         // TOTAL VENTA
                                         totalVenta['1cara'] = parseFloat(precioEscaladoColor[a][2]) * totalImpresiones
                                         totalVenta['2caras'] = parseFloat(precioEscaladoColor[a][2]) * 2 * totalImpresiones
-                                    } /* else {
+                                    }
+                                    if (totalImpresiones > rangoFinal) {
                                         // TOTAL VENTA SIN ACABADOS
-                                        totalVentaSinAcabados['1cara'] = costeAmortizacion1Cara + importePapel + importeImpresion1Cara + importeCorte + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado;
-                                        totalVentaSinAcabados['2caras'] = costeAmortizacion2Caras + importePapel + importeImpresion2Caras + importeCorte + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado;
-                                    } */
+                                        totalVentaSinAcabados['1cara'] = costeAmortizacion1Cara + importePapel + importeImpresion1Cara + importeCorte + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                                        totalVentaSinAcabados['2caras'] = costeAmortizacion2Caras + importePapel + importeImpresion2Caras + importeCorte + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                                        // console.log(costeAmortizacion1Cara, importePapel, importeImpresion1Cara, importeCorte, ventaHendido, importeGrapado, ventaTaladrar);
+                                        
+                                        // TOTAL VENTA SIN CANTOS
+                                        totalVentaSinCantos['1cara'] = 0;
+                                        totalVentaSinCantos['2caras'] = 0;
+                    
+                                        // TOTAL VENTA SIN LAMINADO
+                                        totalVentaSinLaminado['1cara'] = 0;
+                                        totalVentaSinLaminado['2caras'] = 0;
+                    
+                                        // TOTAL VENTA
+                                        totalVenta['1cara'] = costeAmortizacion1Cara + importePapel + importeImpresion1Cara + importeCorte + importeCantos + ventaLaminado + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                                        totalVenta['2caras'] = costeAmortizacion2Caras + importePapel + importeImpresion2Caras + importeCorte + importeCantos + ventaLaminado + ventaHendido + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado + 1;
+                                    }
                                 }
                             }
                             
@@ -352,9 +437,10 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                         }
                                 
                         // ENVÍO DE LOS CÁLCULOS
+                        // Enviamos los cálculos al cargar la página
                         if (!calculosPersonalizados.customTotales[i]) {
                             calculosPersonalizados.customTotales[i] = {
-                                cantidad: calculo[i].cantidad,
+                                cantidad: paginasDocumento,
                                 detalles: {}
                             };
                         }
@@ -384,7 +470,8 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                                 }
                             } 
                         } else {
-                            
+                            // Si ya existe el array, lo actualizamo con los nuevos cálculos
+                            // Este envío es necesario para actualizar el array cada vez que clicamos un nuevo radiobutton
                             calculosPersonalizados.customTotales[i].detalles[j][k]['1Cara'].totalTiempoProduccion = totalTiempoProduccion['1cara'];
                             calculosPersonalizados.customTotales[i].detalles[j][k]['1Cara'].totalCoste = totalCoste['1cara'];
                             calculosPersonalizados.customTotales[i].detalles[j][k]['1Cara'].totalCosteSinAmortizacion = totalCosteSinAmortizacion['1cara'];
@@ -400,8 +487,6 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                             calculosPersonalizados.customTotales[i].detalles[j][k]['2Caras'].totalVentaSinCantos = totalVentaSinCantos['2caras'];
                             calculosPersonalizados.customTotales[i].detalles[j][k]['2Caras'].totalVentaSinLaminado = totalVentaSinLaminado['2caras'];
                             calculosPersonalizados.customTotales[i].detalles[j][k]['2Caras'].totalVenta = totalVenta['2caras'];
-
-                            // console.log('papel', costePapel, importePapel);
                         }
                         //     }
                         // }
@@ -412,31 +497,17 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
 
                 realizarCalculos()
                 
-                // Añadir detector de eventos a cada radio button del grupo color
-                // const colorRadioButtons = document.querySelectorAll('input[name=color]');
-                // colorRadioButtons.forEach(radio => {
-                //     radio.addEventListener('change', () => {
-                //         realizarCalculos()
-                //     });
-                // });
                 
-                function attachChangeEvent(groupName) {
-                    const radios = document.querySelectorAll(`div[data-name='${groupName}'] .wpcc-field-radios input[name=${groupName}]`);
-                    radios.forEach(radio => {
-                        radio.addEventListener('change', realizarCalculos);
-                    });
-                }
-                
-                // attachColorChangeEvent(realizarCalculos);
-                if (cantidadCopias) {
-                    cantidadCopias.addEventListener('input', realizarCalculos);
-                }
+                // Agrega un evento change a todos los radios en el documento
+                document.querySelectorAll("input[type=radio]").forEach(radio => {
+                    radio.addEventListener('change', realizarCalculos);
+                });
 
-                // Llamar a la función para los diferentes grupos
-                attachChangeEvent("color");
-                attachChangeEvent("hojas_por_cara");
-                attachChangeEvent("tamano");
-                attachChangeEvent("cartulina");
+                // Si tienes un elemento con id "cantidadCopias", puedes agregar un evento input
+                // const cantidadCopias = document.getElementById("cantidadCopias");
+                // if (cantidadCopias) {
+                //     cantidadCopias.addEventListener('input', realizarCalculos);
+                // }
                 
                 
             }

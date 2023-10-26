@@ -286,3 +286,13 @@ button.box__button {
     max-height: 15rem;
     transition: max-height 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s, opacity 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.5s; 
 }
+
+/* COPISTERIA ONLINE - OCULTAR TABLA */
+.postid-2784 table.variations__table thead tr th:nth-child(2), 
+.postid-2784 table.variations__table tbody tr td:nth-child(2),
+.postid-2784 table.variations__table thead tr th:nth-child(3), 
+.postid-2784 table.variations__table tbody tr td:nth-child(3),
+.postid-2784 table.variations__table thead tr th:nth-child(4), 
+.postid-2784 table.variations__table tbody tr td:nth-child(4) {
+    display: none !important;
+}

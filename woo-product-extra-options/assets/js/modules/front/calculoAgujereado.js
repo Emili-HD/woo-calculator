@@ -64,6 +64,18 @@ export function calculoAgujereado(calculosPersonalizados, tamanoRadio, nuevaCant
                             let valorTaladrar = taladrarValores[input.value];
                             let paginasDocumento = calculo[i].cantidad;
                             let copias = cantidadCopias.value;
+
+                            const impresionRadio = document.querySelector('input[name=impresion]:checked');
+                            let impresionRadioValue = parseFloat(impresionRadio.value)
+
+                            let totalImpresiones;
+                            if (cantidadCopias) {
+                                totalImpresiones = paginasDocumento * copias;
+                            } else {
+                                totalImpresiones = paginasDocumento
+                            }
+
+                            console.log(totalImpresiones);
                             
                             for (let i in taladrar) {
                                 if (taladrar[i][0] === 'Taladrar') {
@@ -78,7 +90,7 @@ export function calculoAgujereado(calculosPersonalizados, tamanoRadio, nuevaCant
                                 // console.log(manipuladoAgujeros, nombreTaladrar);                                    
                                 
                                 if (nombreTaladrar.includes(nombreCantidadAgujeros) && nombreCantidadAgujeros === manipuladoAgujeros) {
-                                    tiempoPreparacionAgujeros = (paginasDocumento / impresionCarasValor) * copias / cantidadAgujeros[j][0];
+                                    tiempoPreparacionAgujeros = Math.ceil(paginasDocumento / impresionCarasValor) * copias / cantidadAgujeros[j][0];
                                     totalTiempoAgujeros = parseFloat(preparacionAgujeros) + parseFloat(tiempoPreparacionAgujeros);
                                     costeTaladrar = totalTiempoAgujeros.toFixed(2) * 12
         
@@ -123,8 +135,13 @@ export function calculoAgujereado(calculosPersonalizados, tamanoRadio, nuevaCant
     calculoTaladrar();
     
     // Añadir event listeners para manejar cambios en acabadoRadios e impresionRadios
-    acabadoRadios.forEach(radio => radio.addEventListener('change', calculoTaladrar));
-    impresionRadios.forEach(radio => radio.addEventListener('change', calculoTaladrar));
+    // acabadoRadios.forEach(radio => radio.addEventListener('change', calculoTaladrar));
+    // impresionRadios.forEach(radio => radio.addEventListener('change', calculoTaladrar));
+
+    // Agrega un evento change a todos los radios en el documento
+    document.querySelectorAll("input[type=radio]").forEach(radio => {
+        radio.addEventListener('change', calculoTaladrar);
+    });
     
     // console.log('Cálculos taladrar:', calculosPersonalizados.getCalculos());
     
