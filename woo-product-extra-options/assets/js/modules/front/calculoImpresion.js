@@ -125,7 +125,7 @@ export function customCalculoImpresion(calculosPersonalizados, tamanoRadio, nuev
 
     toggleMaquinaBasedOnRadio();
     
-    function attachChangeEvent(groupName) {
+    /* function attachChangeEvent(groupName) {
         const radios = document.querySelectorAll(`div[data-name='${groupName}'] .wpcc-field-radios input[name=${groupName}]`);
         radios.forEach(radio => {
             radio.addEventListener('change', toggleMaquinaBasedOnRadio);
@@ -135,7 +135,7 @@ export function customCalculoImpresion(calculosPersonalizados, tamanoRadio, nuev
     // Llamar a la función para los diferentes grupos
     attachChangeEvent("color");
     attachChangeEvent("hojas_por_cara");
-    attachChangeEvent("tamano");
+    attachChangeEvent("tamano"); */
 
        
     // console.log('Cálculos personalizados:', calculosPersonalizados.getCalculos());

@@ -102,17 +102,17 @@ export function calculoPlastificado(calculosPersonalizados, tamanoRadio, nuevaCa
 
         }
 
-        function attachTamanoChangeEvent() {
-            const tamanoRadios = document.querySelectorAll("div[data-name='tamano'] .wpcc-field-radios input[name=tamano]");
-            tamanoRadios.forEach(radio => {
-                radio.addEventListener('change', handleTamanoChange);
-            });
-        }
+        // function attachTamanoChangeEvent() {
+        //     const tamanoRadios = document.querySelectorAll("div[data-name='tamano'] .wpcc-field-radios input[name=tamano]");
+        //     tamanoRadios.forEach(radio => {
+        //         radio.addEventListener('change', handleTamanoChange);
+        //     });
+        // }
 
         cantidadCopias.addEventListener('input', handleTamanoChange);
 
         handleTamanoChange()
-        attachTamanoChangeEvent()
+        // attachTamanoChangeEvent()
 
     }
 

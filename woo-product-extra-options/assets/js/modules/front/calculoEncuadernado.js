@@ -221,7 +221,8 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
                                     let totalCosteEncuadernado = parseFloat(precioEspiral) + costeTapaFrontal + costeTapaTrasera + ventaPapelPortada + costeEncuadernado
                                     let totalVentaEncuadernado = parseFloat(precioEspiral) + ventaTapaFrontal + ventaTapaTrasera + ventaPapelPortada + importeEncuadernado
                                     // console.log('totalVentaEncuadernado', totalVentaEncuadernado, parseFloat(precioEspiral), ventaTapaFrontal, ventaTapaTrasera, importeEncuadernado, totalVentaEncuadernado );
-    
+                                    // console.log('ventaPapelPortada', ventaPapelPortada);
+
                                     let impresiones = calculo[i].detalles[j][k].impresiones;
                                     let importePapel = 0;
                                     let costeImpresion = 0;
@@ -309,9 +310,9 @@ export function calculoEncuadernado(calculosPersonalizados, nuevaCantidad) {
         toggleMaquinaBasedOnRadio();
 
         // Agrega un evento change a todos los radios en el documento
-        document.querySelectorAll("input[type=radio]").forEach(radio => {
-            radio.addEventListener('change', toggleMaquinaBasedOnRadio);
-        });
+        // document.querySelectorAll("input[type=radio]").forEach(radio => {
+        //     radio.addEventListener('change', toggleMaquinaBasedOnRadio);
+        // });
     
     }
 }

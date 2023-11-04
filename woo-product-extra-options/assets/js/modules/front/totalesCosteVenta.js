@@ -302,8 +302,9 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
 
                                     if (totalImpresiones >= rangoInicial && totalImpresiones <= rangoFinal) {
                                         // TOTAL VENTA SIN ACABADOS
-                                        totalVentaSinAcabados['1cara'] = precio * (totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
-                                        totalVentaSinAcabados['2caras'] = precio * 2 * (totalImpresiones + precioPapel + importePapel + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado);
+                                        // console.log(ventaTaladrar);
+                                        totalVentaSinAcabados['1cara'] = (precio * totalImpresiones + precioPapel + importePapel) + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado;
+                                        totalVentaSinAcabados['2caras'] = (precio * 2 * totalImpresiones + precioPapel + importePapel) + importeFunda + importePlastificado + importeGrapado + ventaTaladrar + ventaPapelPortada + totalVentaEncuadernado + importeImpresionEncuadernado + importePapelEncuadernado;
                                         // console.log(totalImpresiones , precioPapel , importePapel , importeFunda , importePlastificado , importeGrapado , ventaTaladrar , ventaPapelPortada , totalVentaEncuadernado , importeImpresionEncuadernado , importePapelEncuadernado);
                                         // TOTAL VENTA SIN CANTOS
                                         totalVentaSinCantos['1cara'] = 0
@@ -498,10 +499,10 @@ export function customCalculoTotales(calculosPersonalizados, tamanoRadio, nuevaC
                 realizarCalculos()
                 
                 
-                // Agrega un evento change a todos los radios en el documento
-                document.querySelectorAll("input[type=radio]").forEach(radio => {
-                    radio.addEventListener('change', realizarCalculos);
-                });
+                // // Agrega un evento change a todos los radios en el documento
+                // document.querySelectorAll("input[type=radio]").forEach(radio => {
+                //     radio.addEventListener('change', realizarCalculos);
+                // });
 
                 // Si tienes un elemento con id "cantidadCopias", puedes agregar un evento input
                 // const cantidadCopias = document.getElementById("cantidadCopias");

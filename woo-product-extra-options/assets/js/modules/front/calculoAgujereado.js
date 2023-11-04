@@ -75,7 +75,7 @@ export function calculoAgujereado(calculosPersonalizados, tamanoRadio, nuevaCant
                                 totalImpresiones = paginasDocumento
                             }
 
-                            console.log(totalImpresiones);
+                            // console.log(totalImpresiones);
                             
                             for (let i in taladrar) {
                                 if (taladrar[i][0] === 'Taladrar') {
@@ -139,9 +139,9 @@ export function calculoAgujereado(calculosPersonalizados, tamanoRadio, nuevaCant
     // impresionRadios.forEach(radio => radio.addEventListener('change', calculoTaladrar));
 
     // Agrega un evento change a todos los radios en el documento
-    document.querySelectorAll("input[type=radio]").forEach(radio => {
-        radio.addEventListener('change', calculoTaladrar);
-    });
+    // document.querySelectorAll("input[type=radio]").forEach(radio => {
+    //     radio.addEventListener('change', calculoTaladrar);
+    // });
     
     // console.log('Cálculos taladrar:', calculosPersonalizados.getCalculos());
     

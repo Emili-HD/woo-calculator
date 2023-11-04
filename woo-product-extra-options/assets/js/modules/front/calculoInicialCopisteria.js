@@ -13,7 +13,7 @@ function getTamanoKey(alto, ancho) {
 // Esta función envía todos los cálculos necesarios para calcular los sucesivos módulos
 export function calculoInicialCopisteria(calculosPersonalizados) {
 
-    calculosPersonalizados.calculosInicialesCopisteria = []
+    // calculosPersonalizados.calculosInicialesCopisteria = []
 
     if (productData.name == 'Copistería online') {
 
@@ -89,8 +89,8 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
 
                                     if (copisteria[i][1] === tam.ancho && copisteria[i][2] === tam.alto) {
                                         // console.log(copisteria[i][2], tam.ancho);
-                                        const originales = copisteria[i][3]
-                                        const corte = copisteria[i][5]
+                                        const originales = parseFloat(copisteria[i][4])
+                                        const corte = parseFloat(copisteria[i][5])
                                         const tirada = Math.ceil(cantidad / hojasPorCara) * originales * copias;
 
                                         // console.log('tirada:', cantidad, hojasPorCara, originales, copias);
@@ -99,9 +99,9 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
                                         impresion.forEach((cara) => {
                                             const label = `${cara}cara${cara > 1 ? 's' : ''}`;
                                             if (parseInt(selectedImpresionRadio.value) === 1 && formatoSeleccionado === 'A3' && maquina === 'Fuji'){
-                                                impresiones[label] = parseInt(cara) * tirada * 2;
+                                                impresiones[label] = parseInt(cara) * tirada * 2 / hojasPorCara;
                                             } else {
-                                                impresiones[label] = parseInt(cara) * tirada;
+                                                impresiones[label] = parseInt(cara) * tirada * originales / hojasPorCara;
                                             }
                                         });
 
@@ -135,7 +135,7 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
         
         toggleMaquina()
 
-        function attachChangeEvent(groupName) {
+        /* function attachChangeEvent(groupName) {
             const radios = document.querySelectorAll(`div[data-name='${groupName}'] .wpcc-field-radios input[name=${groupName}]`);
             radios.forEach(radio => {
                 radio.addEventListener('change', toggleMaquina);
@@ -145,6 +145,6 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
         // Llamar a la función para los diferentes grupos
         attachChangeEvent("color");
         attachChangeEvent("hojas_por_cara");
-        attachChangeEvent("tamano");
+        attachChangeEvent("tamano"); */
     }
 }

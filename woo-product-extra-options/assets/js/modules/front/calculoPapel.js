@@ -187,7 +187,7 @@ export function customCalculoPapel(calculosPersonalizados, tamanoRadio, nuevaCan
         
         handleColorChange()
 
-        const colorRadios = document.querySelectorAll("div[data-name='color'] .wpcc-field-radios input[name=color]");
+        /* const colorRadios = document.querySelectorAll("div[data-name='color'] .wpcc-field-radios input[name=color]");
         colorRadios.forEach(radio => {
             radio.addEventListener('change', handleColorChange);
         });
@@ -202,7 +202,7 @@ export function customCalculoPapel(calculosPersonalizados, tamanoRadio, nuevaCan
         // Llamar a la función para los diferentes grupos
         // attachChangeEvent("color");
         attachChangeEvent("hojas_por_cara");
-        attachChangeEvent("tamano");
+        attachChangeEvent("tamano"); */
 
     } else {
         calculo = calculosPersonalizados.customCalculosIniciales

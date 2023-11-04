@@ -15,12 +15,22 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
     if (data.campos && data.campos.cartulina) {
         const cartulinasSeleccionadas = data.campos.cartulina;
         const impresion = data.campos.impresion;
+        const hojasPorCaraRadio = document.querySelector("div[data-name='hojas_por_cara'] .wpcc-field-radios input[name=hojas_por_cara]:checked")
+
+        let hojasPorCara;
+
+        if (hojasPorCaraRadio) {
+            if (parseInt(hojasPorCaraRadio.value) !== 3) {
+                hojasPorCara = parseInt(hojasPorCaraRadio.value)
+            } else {
+                hojasPorCara = parseInt(hojasPorCaraRadio.value) - 1
+            }
+        }
+        // console.log('hojasPorCara', hojasPorCara);
 
         const materiasPrimasSeleccionadas = data.primas.materias.filter(materia => {
             return cartulinasSeleccionadas.includes(materia[0]);
         });
-
-        // console.log('materiasPrimasSeleccionadas', materiasPrimasSeleccionadas);
 
         // Crear un conjunto para almacenar tamaños únicos como objetos
         let tamanosUnicos = new Set();
@@ -28,12 +38,9 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
         let calculo;
         if (productData.name == 'Copistería online') { 
             calculo = calculosPersonalizados.calculosInicialesCopisteria
-            // console.log('calculoCopisteria:', calculo);
         } else {
             calculo = calculosPersonalizados.customCalculosIniciales
-            // console.log('calculoIniciales:', calculo);
         }
-        // console.log(nuevaCantidad);
 
         // Reiniciar el objeto detallesCantidad antes de calcular los detalles para la nueva cantidad
         const detallesCantidad = {};
@@ -77,15 +84,12 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
 
                         
                         const copisteria = data.primas.copisteria
-                        // console.log(copisteria);
                         for (const i in copisteria) {
                             if (maquina === copisteria[i][0]) {
-                                // console.log(copisteria[i][2], tam.alto);
                                 if (parseFloat(copisteria[i][2]) === tam.alto) {
-                                    // console.log(copisteria[i][2], tam.ancho);
-                                    let originales = copisteria[i][3]
-                                    let corte = copisteria[i][5]
-                                    let tirada = Math.ceil(nuevaCantidad / originales);
+                                    let originales = parseFloat(copisteria[i][4])
+                                    let corte = parseFloat(copisteria[i][5])
+                                    let tirada = Math.ceil(nuevaCantidad * originales / hojasPorCara);
                                     
                                     let impresiones = {};
                                     impresion.forEach((cara) => {

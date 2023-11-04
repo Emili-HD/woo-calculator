@@ -155,17 +155,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
             });
         }
         
-        function attachRadioChangeEvent() {
-            const encuadernadoRadios = document.querySelectorAll("div[data-name='acabado'] .wpcc-field-radios input[name=acabado]");
+        // function attachRadioChangeEvent() {
+        //     const encuadernadoRadios = document.querySelectorAll("div[data-name='acabado'] .wpcc-field-radios input[name=acabado]");
             
-            encuadernadoRadios.forEach(radio => {
-                radio.addEventListener('change', toggleActiveClassBasedOnRadio);
-            });
-        }
+        //     encuadernadoRadios.forEach(radio => {
+        //         radio.addEventListener('change', toggleActiveClassBasedOnRadio);
+        //     });
+        // }
         
         // Ejecuta la función al cargar el script y también añade el evento.
         toggleActiveClassBasedOnRadio();
-        attachRadioChangeEvent();
+        // attachRadioChangeEvent();
          
 
         function getRadioValues() {
@@ -407,11 +407,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
         
         // Llamar a la función cada vez que se modifica la selección en el campo "Impresión".
         var impresionRadios = document.querySelectorAll("div[data-name='impresion'] .wpcc-field-radios input[type=radio]");
-        impresionRadios.forEach(function(radio) {
-            radio.addEventListener('change', function() {
-                toggleLaminadoOptionBasedOnImpresion();
-            });
-        });
+        // impresionRadios.forEach(function(radio) {
+        //     radio.addEventListener('change', function() {
+        //         toggleLaminadoOptionBasedOnImpresion();
+        //     });
+        // });
         
         function getCheckedRadioValue(radios) {
             for (var i = 0; i < radios.length; i++) {
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
 
 
-        document.querySelectorAll(".wpcc-field-radios input[type=radio]").forEach(radio => {
+        /* document.querySelectorAll(".wpcc-field-radios input[type=radio]").forEach(radio => {
             radio.addEventListener('change', function() {
                 const { cartulinaVal, tamanoVal, impresionVal, cantosVal, laminadoVal, hendidoVal, colorVal  } = getRadioValues();
 
@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 updateTableValues(cartulinaVal, tamanoVal, impresionVal, cantosVal, laminadoVal, hendidoVal, colorVal );
 
             });
-        });
+        }); */
     
         
         // Obtener los valores de alto y ancho del usuario
@@ -505,6 +505,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             customCalculoCanto(calculosPersonalizados, nuevaCantidad, cantidadCopias);
             customCalculoLaminado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
             customCalculoHendido(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoAgujereado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
             calculoGrapado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
             calculoEncuadernado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
             calculoPlastificado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
@@ -536,7 +537,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 // Llamar a la nueva función que combina cálculos y actualizaciones
                 realizarCalculosYActualizar(nuevaCantidad);
             } else {
-                console.log('Los valores de alto y ancho deben ser mayores a 0 para actualizar la tabla.');
+                // console.log('Los valores de alto y ancho deben ser mayores a 0 para actualizar la tabla.');
             }
         }
         
@@ -547,7 +548,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 cantidadCopias = parseInt(copiasInput.value);
                 nuevaCantidad = nuevaCantidad * cantidadCopias
             }
-            console.log('nuevaCantidad', nuevaCantidad);
+            // console.log('nuevaCantidad', nuevaCantidad);
             
             if (!isNaN(nuevaCantidad) && nuevaCantidad >= 0) {
                 // Verificar si ya existe el th para la cantidad personalizada
@@ -607,6 +608,53 @@ document.addEventListener('DOMContentLoaded', (event) => {
         calcularCantidadBtn.addEventListener('click', (e) => {
             e.preventDefault(); // Prevenir la recarga de la página
             recalcularCantidades();
+        });
+
+        // Definir la función que ejecutará ambas funciones
+        function handleRadioChange() {
+            /* customCalculoInicial(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoInicialCopisteria(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoCustomTamano(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoCustomCantidad(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoPapel(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoImpresion(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoCorte(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoCanto(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoLaminado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoHendido(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            customCalculoTotales(calculosPersonalizados, nuevaCantidad, cantidadCopias); */
+            calculoGrapado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoAgujereado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoEncuadernado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+            calculoPlastificado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
+
+            const { cartulinaVal, tamanoVal, impresionVal, cantosVal, laminadoVal, hendidoVal, colorVal  } = getRadioValues();
+            var customSizesRadio = document.querySelector(".wpcc-field-radios .custom__sizes input[type=radio]");
+        
+            if (customSizesRadio && customSizesRadio.checked) {
+                var customSizesSize = customSizesRadio.closest('.custom__sizes').querySelector('.custom__sizes-size');
+                if (customSizesSize) {
+                    customSizesSize.classList.add('active');
+                }
+            } 
+            else if (customSizesRadio) {
+                var customSizesSize = customSizesRadio.closest('.custom__sizes').querySelector('.custom__sizes-size');
+                if (customSizesSize) {
+                    customSizesSize.classList.remove('active');
+                }
+            }
+            updateTableValues(cartulinaVal, tamanoVal, impresionVal, cantosVal, laminadoVal, hendidoVal, colorVal );
+
+            toggleLaminadoOptionBasedOnImpresion()
+            toggleActiveClassBasedOnRadio()
+            recalcularCantidades();
+        }
+
+        handleRadioChange()
+
+        // Añadir el listener a cada radio button
+        document.querySelectorAll("input[type=radio]").forEach(radio => {
+            radio.addEventListener('change', handleRadioChange);
         });
 
         /********************************************/
