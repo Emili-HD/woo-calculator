@@ -50,7 +50,7 @@ function mostrar_campos_acf_en_producto() {
                                 $isChecked = ($opcion_seleccionada == $valorPorDefecto) ? 'checked' : '';
 
                                 // Utilizamos expresiones regulares para extraer el formato de papel
-                                preg_match('/^(A4|A3|SRA3)/', $label, $matches);
+                                preg_match('/^(A5|A4|A3|SRA3)/', $label, $matches);
                                 $formato_papel = isset($matches[1]) ? $matches[1] : '';
 
                                 // Eliminamos el formato de papel del label

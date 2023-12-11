@@ -38,14 +38,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
         if (productData.name == 'Copistería online') { 
 
             /* ************************************************************************* */
-            /* Con este fragmento mostramos y ocultamos los radiobuttons según su medida 
+            /* Con este fragmento mostramos y ocultamos los radiobuttons según su formato 
              y seleccionamos el primer radio visible de cada grupo al realizar el cambio */
             /* ************************************************************************* */
 
             const tamanoGroup = document.querySelector(".wpcc-group-radios[data-name=tamano]");
+            const colorGroup = document.querySelector(".wpcc-group-radios[data-name=color]");
         
-            // Agrega un evento change a los radios del grupo "tamano"
-            tamanoGroup.addEventListener("change", function() {
+            function cambiarFormato() {
                 // Obtiene el valor del radio seleccionado
                 const selectedTamano = tamanoGroup.querySelector("input[name='tamano']:checked").getAttribute("data-format");
         
@@ -55,37 +55,60 @@ document.addEventListener('DOMContentLoaded', (event) => {
         
                 allGroups.forEach(group => {
                     const inputRadios = group.querySelectorAll("input[type=radio]:not([name=tamano])");
-        
+                    const colorRadios = document.querySelector("input[name=color]:checked")
+                    let colorRadioValue = colorRadios.value
+                    
                     const filteredInputRadios = [];
-        
+                    
                     inputRadios.forEach(input => {
                         const dataFormatValue = input.getAttribute('data-format');
                         if (dataFormatValue !== null && dataFormatValue !== "") {
                             filteredInputRadios.push(input);
                         }
                     });
-        
+                    
                     let firstVisibleRadio = null;
-        
+                    
                     filteredInputRadios.forEach(function(radio) {
                         let format = radio.getAttribute("data-format");
+                        let name = radio.getAttribute("name");
                         let parent = radio.parentElement;
-        
+
+                        // console.log('nombre del radio', name);
+                        
                         const selectRadios = () => {
                             if (!firstVisibleRadio) {
                                 firstVisibleRadio = radio;
                                 firstVisibleRadio.checked = true;
+                                // firstVisibleRadio.dispatchEvent(new Event('change'));
                             }
                         }
-        
-                        if ((selectedTamano === "A4" || selectedTamano === "A5" || selectedTamano === "A6") && format === "A4") {
-                            parent.style.display = "block";
-                            selectRadios();
-                        } else if ((selectedTamano === "A3" || selectedTamano === "SRA3") && (format === "A3" || format === "SRA3")) {
-                            parent.style.display = "block";
-                            selectRadios();
+                        
+                        if (colorRadioValue === 'bn') {
+                            if ((selectedTamano === "A4" || selectedTamano === "A5" || selectedTamano === "A6") && format === "A4") {
+                                parent.style.display = "block";
+                                selectRadios();
+                            } 
+                            /* else if (selectedTamano === "A5" && format === "A5") {
+                                parent.style.display = "block";
+                                selectRadios();
+                            }  */
+                            else if ((selectedTamano === "A3" || selectedTamano === "SRA3") && (format === "A3" || format === "SRA3")) {
+                                parent.style.display = "block";
+                                selectRadios();
+                            } 
+                            else {
+                                parent.style.display = "none";
+                            }
                         } else {
-                            parent.style.display = "none";
+                            if ((selectedTamano === "A3" || selectedTamano === "A4" || selectedTamano === "A5" || selectedTamano === "A6") && format === "SRA3") {
+                                parent.style.display = "block";
+                                selectRadios();
+                            } 
+                            else {
+                                parent.style.display = "none";
+                            }
+
                         }
                     });
                     if (firstVisibleRadio) {
@@ -98,10 +121,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     // Realiza cualquier operación adicional con el primer radio visible del grupo
                     console.log(`Grupo: ${group}, Primer radio visible: ${firstVisibleRadio}`);
                 }); */
-            });
+            };
+
+            tamanoGroup.addEventListener("change", cambiarFormato)
+            colorGroup.addEventListener("change", cambiarFormato)
         
             // Ejecuta el evento change inicialmente para reflejar el estado inicial
             tamanoGroup.dispatchEvent(new Event("change"));
+            colorGroup.dispatchEvent(new Event("change"));
         }
         
 
@@ -135,25 +162,64 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const colorGroup = document.querySelector('div[data-name=color] .wpcc-field-radios');
         // const firstRadioInput = cartulinaGroup.querySelector('input[type="radio"]');
 
-        function toggleActiveClassBasedOnRadio() {            
+        function toggleActiveClassBasedOnRadio() {
             const encuadernadoGroup = document.querySelectorAll(".wpcc-group-radios[data-family=encuadernado]");
-            const encuadernadoRadios = document.querySelectorAll("div[data-name='acabado'] .wpcc-field-radios input[name=acabado]");
+            const plastificadoGroup = document.querySelectorAll(".wpcc-group-radios[data-family=plastificado]");
+            const agujerosGroup = document.querySelectorAll(".wpcc-group-radios[data-family=agujeros]");
+            const pasarPaginaGroup = document.querySelectorAll(".wpcc-group-radios[data-family=pasar-pagina]");
+            const acabadoRadios = document.querySelectorAll("div[data-name='acabado'] .wpcc-field-radios input[name=acabado]");
+            const impresionRadios = document.querySelectorAll("div[data-name='impresion'] .wpcc-field-radios input[name=impresion]");
         
-            encuadernadoRadios.forEach(radio => {
-                if (radio.checked) {
-                    let currentValue = radio.value;
+            acabadoRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        const currentValue = this.value;
         
-                    encuadernadoGroup.forEach(group => {
-                        if (currentValue !== 'encuadernado') {
-                            group.classList.remove('active');
-                        } else {
-                            // console.log('encuadernado checked');
-                            group.classList.add('active');
-                        }
-                    });
-                }
+                        encuadernadoGroup.forEach(group => {
+                            if (currentValue === 'encuadernado' && group.dataset.family === 'encuadernado') {
+                                group.classList.add('active');
+                            } else {
+                                group.classList.remove('active');
+                            }
+                        });
+        
+                        plastificadoGroup.forEach(group => {
+                            if (currentValue === 'plastificado' && group.dataset.family === 'plastificado') {
+                                group.classList.add('active');
+                            } else {
+                                group.classList.remove('active');
+                            }
+                        });
+        
+                        agujerosGroup.forEach(group => {
+                            if ((currentValue === 'taladrar_2_agujeros' || currentValue === 'taladrar_4_agujeros') && group.dataset.family === 'agujeros') {
+                                group.classList.add('active');
+                            } else {
+                                group.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            });
+            impresionRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        const currentValue = this.value;
+        
+                        pasarPaginaGroup.forEach(group => {
+                            if (currentValue === '2' && group.dataset.family === 'pasar-pagina') {
+                                group.classList.add('active');
+                            } else {
+                                group.classList.remove('active');
+                            }
+                        });
+        
+                    }
+                });
             });
         }
+        
+        
         
         // function attachRadioChangeEvent() {
         //     const encuadernadoRadios = document.querySelectorAll("div[data-name='acabado'] .wpcc-field-radios input[name=acabado]");
@@ -429,32 +495,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 }
             }
             return false;
-        }
-
-
-        /* document.querySelectorAll(".wpcc-field-radios input[type=radio]").forEach(radio => {
-            radio.addEventListener('change', function() {
-                const { cartulinaVal, tamanoVal, impresionVal, cantosVal, laminadoVal, hendidoVal, colorVal  } = getRadioValues();
-
-                var customSizesRadio = document.querySelector(".wpcc-field-radios .custom__sizes input[type=radio]");
-            
-                if (customSizesRadio && customSizesRadio.checked) {
-                    var customSizesSize = customSizesRadio.closest('.custom__sizes').querySelector('.custom__sizes-size');
-                    if (customSizesSize) {
-                        customSizesSize.classList.add('active');
-                    }
-                } 
-                else if (customSizesRadio) {
-                    var customSizesSize = customSizesRadio.closest('.custom__sizes').querySelector('.custom__sizes-size');
-                    if (customSizesSize) {
-                        customSizesSize.classList.remove('active');
-                    }
-                }
-                updateTableValues(cartulinaVal, tamanoVal, impresionVal, cantosVal, laminadoVal, hendidoVal, colorVal );
-
-            });
-        }); */
-    
+        }   
         
         // Obtener los valores de alto y ancho del usuario
         const calcularCantidadBtn = document.querySelector('#calcularCantidad');
@@ -612,17 +653,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         // Definir la función que ejecutará ambas funciones
         function handleRadioChange() {
-            /* customCalculoInicial(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            calculoInicialCopisteria(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            calculoCustomTamano(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            calculoCustomCantidad(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            customCalculoPapel(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            customCalculoImpresion(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            customCalculoCorte(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            customCalculoCanto(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            customCalculoLaminado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            customCalculoHendido(calculosPersonalizados, nuevaCantidad, cantidadCopias);
-            customCalculoTotales(calculosPersonalizados, nuevaCantidad, cantidadCopias); */
             calculoGrapado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
             calculoAgujereado(calculosPersonalizados, nuevaCantidad, cantidadCopias);
             calculoEncuadernado(calculosPersonalizados, nuevaCantidad, cantidadCopias);

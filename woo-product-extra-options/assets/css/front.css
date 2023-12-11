@@ -1,6 +1,6 @@
 .archive li.product a.button {
-    position: absolute;
     bottom: -45px;
+    position: absolute;
     right: 1rem;
 }
 
@@ -19,10 +19,10 @@ input[type=number] { -moz-appearance:textfield; }
 
 div#tab-description.woocommerce-Tabs-panel--description {
     display: block !important;
-    width: 60vw;
+    margin-bottom: 0vh;
     padding-left: 1.5vw;
     padding-right: 1.5vw;
-    margin-bottom: 0vh;
+    width: 60vw;
 }
 
 div#tab-description.woocommerce-Tabs-panel--description .woocommerce-Tabs-panel--description {
@@ -42,15 +42,15 @@ div#tab-description.woocommerce-Tabs-panel--description p {
 
 
 .single-product .section.site-main .product.type-product .entry-summary {
-    width: 60vw;
+    align-content: flex-start;
+    align-items: flex-start;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
     flex-wrap: wrap;
+    justify-content: flex-start;
     margin: 0;
     padding-bottom: 10vh;
-    align-content: flex-start;
+    width: 60vw;
 }
 
 .wpcc-field {
@@ -60,11 +60,11 @@ div#tab-description.woocommerce-Tabs-panel--description p {
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: center;
-    padding: 1rem 0;
     margin: 0px;
+    order: 2;
+    padding: 1rem 0;
     transition: background-color 0.3s ease 0s;
     width: 20vw;
-    order: 2;
 }
 .wpcc-field:hover {
     background-color: #f5f5f5;
@@ -110,18 +110,18 @@ div#tab-description.woocommerce-Tabs-panel--description p {
 }
 
 .wpcc-input-radio {
+    font-size: 0.9rem;
     margin: 0;
     padding: 0.25rem 1.5625rem;
     width: 20vw;
-    font-size: 0.9rem;
 }
 
 .wpcc-input-radio .custom__sizes-size {
-    margin-top: 1rem;
-    position: relative;
-    overflow: hidden;
     height: fit-content;
+    margin-top: 1rem;
     max-height: 0;
+    overflow: hidden;
+    position: relative;
     transition: max-height 0.5s ease;
 }
 
@@ -129,61 +129,69 @@ div#tab-description.woocommerce-Tabs-panel--description p {
     max-height: 12.5rem;
 }
 
-.wpcc-group-radios[data-family=encuadernado] {
-    width: 0%;
-    margin-top: 1rem;
-    position: relative;
-    overflow: hidden;
+.wpcc-group-radios[data-family=encuadernado],
+.wpcc-group-radios[data-family=plastificado],
+.wpcc-group-radios[data-family=agujeros],
+.wpcc-group-radios[data-family=pasar-pagina] {
     height: fit-content;
-    padding: 0;
-    opacity: 0;
+    margin-top: 1rem;
     max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
     transition: all 0.25s ease;
+    width: 0%;
 }
 
 .wpcc-group-radios.active {
-    opacity: 1;
-    width: 20vw;
-    padding: 1rem 0;
     max-height: 50rem !important;
+    opacity: 1;
+    padding: 1rem 0;
+    width: 20vw;
 }
 
 .wpcc-input-radio .custom__sizes-size span {
-    width: 80px;
     display: inline-block;
+    width: 80px;
 }
 
 .wpcc-input-radio .custom__sizes-size input[type="number"] {
-    width: calc(100% - 90px);
     display: inline-block;
+    width: calc(100% - 90px);
 }
 
 .variations__table-title {
+    align-items: flex-end;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: .3125rem;
     margin: 1.5rem 0;
+    width: 100%;
+}
+
+.variations__table-title h2, .variations__table-title p {
     width: 100%;
 }
 
 .variations__table-title label {
     display: inline-flex;
     flex-direction: column;
-    margin-right: 1rem;
     row-gap: .5rem;
 }
 
 .variations__table-title input.custom__quantity {
-    display: inline-block;
-    width: 100%;
+    width: 10vw;
 }
 
 .variations__table-title #calcularCantidad {
-    display: inline-block;
+    margin: 0;
     width: 7.5rem;
-    translate: 0 2.5rem;
 }
 
 button[type=button],
 button[type="submit"] {
-    width: max(200px, 15vw);
     background-color: #E97F25;
     border: 0;
     border-radius: 0;
@@ -194,6 +202,7 @@ button[type="submit"] {
     margin-top: 1.4rem;
     order: 3;
     padding: 0.7rem;
+    width: max(200px, 15vw);
 }
 
 #calcularBtn,
@@ -211,15 +220,15 @@ button[type="submit"] {
 
 .wpcc-input-upload,
 .vicode-custom-field-wrapper {
-    outline: 1px dashed #ccc;
-    outline-offset: -10px;
-    width: calc(20vw - 3rem);
+    align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
     margin: 1.5rem;
+    outline: 1px dashed #ccc;
+    outline-offset: -10px;
+    padding: 1.5rem;
+    width: calc(20vw - 3rem);
 }
 
 .wpcc-input-upload .box__dragndrop {
@@ -227,10 +236,10 @@ button[type="submit"] {
 }
 
 .wpcc-input-upload .box__icon {
-    width: 70%;
-    height: 80px;
-    fill: #627C8A;
     display: block;
+    fill: #627C8A;
+    height: 80px;
+    width: 70%;
 }
 
 .wpcc-input-upload label {
@@ -239,16 +248,15 @@ button[type="submit"] {
 
 .box__file,
 #vicode-file-field {
-    width: 0.1px;
     height: 0.1px;
     opacity: 0;
     overflow: hidden;
     position: absolute;
+    width: 0.1px;
     z-index: -1;
 }
 
 button.box__button {
-    width: 200px;
     background-color: #617d8b;
     border: 0;
     border-radius: 0;
@@ -258,6 +266,7 @@ button.box__button {
     font-weight: 500;
     margin-top: 0;
     padding: 0.7rem;
+    width: 200px;
 }
 
 
@@ -267,23 +276,23 @@ button.box__button {
 }
 
 .product-type-simple form.cart .addtocart-wrapper {
+    align-items: flex-end;
+    display: flex;
+    justify-content: flex-start;
     padding: 2rem !important;
     width: 60vw;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
 }
 
 .wpcc-group-radios[data-name=tipo_laminado] {
-    overflow: hidden;
     max-height: 0;
     opacity: 0;
+    overflow: hidden;
     transition: max-height 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.5s, opacity 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
 }
 
 .wpcc-group-radios.active {
-    opacity: 1;
     max-height: 15rem;
+    opacity: 1;
     transition: max-height 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0s, opacity 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.5s; 
 }
 

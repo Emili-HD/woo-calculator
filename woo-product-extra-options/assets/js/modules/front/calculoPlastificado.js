@@ -22,6 +22,7 @@ export function calculoPlastificado(calculosPersonalizados, tamanoRadio, nuevaCa
 
         function handleTamanoChange() {
             const selectedTanamoRadio = document.querySelector("div[data-name=tamano] .wpcc-field-radios input[name=tamano]:checked");
+            const selectedGrosor = document.querySelector("div[data-name=grosor] .wpcc-field-radios input[name=grosor]:checked");
             let copias = parseInt(cantidadCopias.value, 10);
 
             if (selectedTanamoRadio) {
@@ -47,37 +48,49 @@ export function calculoPlastificado(calculosPersonalizados, tamanoRadio, nuevaCa
                     let paginasDocumento = calculo[i].cantidad;
                     const tiempoManipulado = data.primas.tiempo_manipulado
                     const precioManipulado = data.primas.precio_hora_manipulado
+                    let formatoPlastificado = selectedGrosor.getAttribute('data-format')
 
-                    if (ancho === '297' && alto === '420') {
-                        plastificado = parseFloat(tipoPlastificado[3][5])
-                        produccionPlastificado = tiempoManipulado[3][0]
-                    } else if (ancho === '210' && alto === '297') {
-                        plastificado = parseFloat(tipoPlastificado[1][5])
-                        produccionPlastificado = tiempoManipulado[4][0]
-                    } else if (ancho <= '148' && alto <= '210') {
-                        plastificado = tipoPlastificado[7][5]
+                    // console.log('tiempoManipulado', tiempoManipulado);
+                    // console.log(selectedGrosor.getAttribute('data-format'));
+                    for (const i in tipoPlastificado) {
+                        if (selectedGrosor.value === tipoPlastificado[i][0]) {
+                            plastificado = parseFloat(tipoPlastificado[i][5])
+                            break;
+                        }
+                    }
+
+                    if (formatoPlastificado === 'A3') {
+                        produccionPlastificado = parseFloat(tiempoManipulado[3][0])
+                    } else if (formatoPlastificado === 'A4') {
+                        produccionPlastificado = parseFloat(tiempoManipulado[4][0])
+                    } else if (formatoPlastificado === 'A5') {
                         produccionPlastificado = parseFloat(tiempoManipulado[5][0])
                     } else  {
-                        plastificado = tipoPlastificado[1][5]
                         produccionPlastificado = parseFloat(tiempoManipulado[4][0])
                     }
+
                     
 
-                    costeFunda = paginasDocumento * copias * plastificado
+                    // console.log(paginasDocumento, copias, produccionPlastificado);
+
+                    costeFunda = paginasDocumento * plastificado
                     importeFunda = costeFunda * 2
-                    tiempoProduccionPlastificado = paginasDocumento * copias / produccionPlastificado
+                    tiempoProduccionPlastificado = paginasDocumento / produccionPlastificado
                     costePlastificado = tiempoProduccionPlastificado * 12
+
+                    // console.log('costeFunda', paginasDocumento, plastificado);
 
                     for (let i in precioManipulado) {
                         if ( tiempoProduccionPlastificado >= precioManipulado[i][2] && tiempoProduccionPlastificado <= precioManipulado[i][3] ) {
-                            importePlastificado = tiempoProduccionPlastificado * precioManipulado[i][0]
+                            importePlastificado = tiempoProduccionPlastificado * parseFloat(precioManipulado[i][0])
+                            // console.log(tiempoProduccionPlastificado, precioManipulado[i][0]);
                         }
                     }
 
 
                     if (!calculosPersonalizados.calculosPlastificado[i]) {
                         calculosPersonalizados.calculosPlastificado[i] = {
-                            paginas: calculo[i].cantidad,
+                            cantidad: calculo[i].cantidad,
                             detalles: {
                                 tiempoProduccionPlastificado: tiempoProduccionPlastificado,
                                 costeFunda: costeFunda,

@@ -16,6 +16,7 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
         const cartulinasSeleccionadas = data.campos.cartulina;
         const impresion = data.campos.impresion;
         const hojasPorCaraRadio = document.querySelector("div[data-name='hojas_por_cara'] .wpcc-field-radios input[name=hojas_por_cara]:checked")
+        const selectedImpresionRadio = document.querySelector("div[data-name=impresion] .wpcc-field-radios input[name=impresion]:checked");
 
         let hojasPorCara;
 
@@ -89,7 +90,7 @@ export function calculoCustomCantidad(calculosPersonalizados, nuevaCantidad) {
                                 if (parseFloat(copisteria[i][2]) === tam.alto) {
                                     let originales = parseFloat(copisteria[i][4])
                                     let corte = parseFloat(copisteria[i][5])
-                                    let tirada = Math.ceil(nuevaCantidad * originales / hojasPorCara);
+                                    let tirada = Math.ceil(nuevaCantidad * originales / hojasPorCara / parseFloat(selectedImpresionRadio.value));
                                     
                                     let impresiones = {};
                                     impresion.forEach((cara) => {

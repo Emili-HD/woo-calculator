@@ -68,7 +68,7 @@ export function customCalculoImpresion(calculosPersonalizados, tamanoRadio, nuev
         } else {
             calculo = calculosPersonalizados.customCalculosIniciales
         }
-        
+        // console.log('produccionHoraValor', produccionHoraValor);
         if (produccionHoraValor !== 0) {
             for (const i in calculo) {
                 for (const j in calculo[i].detalles) {
@@ -97,6 +97,8 @@ export function customCalculoImpresion(calculosPersonalizados, tamanoRadio, nuev
                                     break;
                                 }
                             }
+
+                            // console.log('importeImpresion', importeImpresion);
                             
                             if (!calculosPersonalizados.customCalculosImpresiones[i]) {
                                 calculosPersonalizados.customCalculosImpresiones[i] = {

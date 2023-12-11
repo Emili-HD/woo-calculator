@@ -86,21 +86,28 @@ export function calculoInicialCopisteria(calculosPersonalizados) {
                                         totalImpresiones = cantidad * copias
                                     }
                                     // console.log(totalImpresiones);
+                                    // console.log('tirada:', cantidad, hojasPorCara, copias);
 
                                     if (copisteria[i][1] === tam.ancho && copisteria[i][2] === tam.alto) {
                                         // console.log(copisteria[i][2], tam.ancho);
                                         const originales = parseFloat(copisteria[i][4])
                                         const corte = parseFloat(copisteria[i][5])
-                                        const tirada = Math.ceil(cantidad / hojasPorCara) * originales * copias;
+                                        // const tirada = (Math.ceil(cantidad / hojasPorCara) * originales * copias / parseFloat(selectedImpresionRadio.value));
 
-                                        // console.log('tirada:', cantidad, hojasPorCara, originales, copias);
-
+                                        // console.log('caras', selectedImpresionRadio.value);
+                                        
+                                        let tirada = {};
                                         let impresiones = {};
+
                                         impresion.forEach((cara) => {
                                             const label = `${cara}cara${cara > 1 ? 's' : ''}`;
+                                            tirada[label] = 0; // Inicializar tirada con valor 0 para cada label
+                                            
                                             if (parseInt(selectedImpresionRadio.value) === 1 && formatoSeleccionado === 'A3' && maquina === 'Fuji'){
+                                                tirada[label] = (Math.ceil(cantidad / hojasPorCara) * originales * copias / parseFloat(selectedImpresionRadio.value))
                                                 impresiones[label] = parseInt(cara) * tirada * 2 / hojasPorCara;
                                             } else {
+                                                tirada[label] = (Math.ceil(cantidad / hojasPorCara) * originales * copias / parseFloat(selectedImpresionRadio.value))
                                                 impresiones[label] = parseInt(cara) * tirada * originales / hojasPorCara;
                                             }
                                         });
